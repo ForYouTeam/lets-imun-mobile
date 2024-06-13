@@ -10,16 +10,20 @@ const Home = () => {
         <SafeAreaView style={{ paddingTop: 24 }}>
             <StatusBar style="auto" />
             <ScrollView>
-                <View style={{
-                    paddingTop: 20,
-                    backgroundColor: 'white',
-                    height: '100%',
-                    width: '100%',
-                }}>
-                    <View style={{
-                        flexDirection: 'column',
-                        rowGap: 10,
-                    }}>
+                <View
+                    style={{
+                        paddingTop: 20,
+                        backgroundColor: "white",
+                        height: "100%",
+                        width: "100%",
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: "column",
+                            rowGap: 10,
+                        }}
+                    >
                         <Header />
                         <CourselNews />
                         <Calendar />
