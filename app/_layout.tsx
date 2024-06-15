@@ -11,6 +11,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CustomSplashScreen from "@/components/customeSplashScreen";
+import { GlobalProvider } from "@/context/GlobalState";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,14 +44,16 @@ export default function RootLayout() {
     }
 
     return (
-        <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-            <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen name="login" />
-            </Stack>
-        </ThemeProvider>
+        <GlobalProvider>
+            <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+                <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen name="login" />
+                </Stack>
+            </ThemeProvider>
+        </GlobalProvider>
     );
 }

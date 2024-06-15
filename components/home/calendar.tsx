@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { useHome } from "@/context/home/HomeState";
 import {
     Image,
     Text,
@@ -123,6 +124,7 @@ const ScheduleList = () => {
 };
 
 const Calendar = () => {
+    const { newsPayload } = useHome();
     return (
         <View style={{ paddingHorizontal: 10 }}>
             <View
@@ -200,7 +202,7 @@ const Calendar = () => {
                                 fontFamily: "InterMedium",
                             }}
                         >
-                            Juni
+                            { newsPayload.month }
                         </Text>
                     </View>
                     <TouchableOpacity

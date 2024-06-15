@@ -4,6 +4,7 @@ import CourselNews from "@/components/courselNews";
 import Header from "@/components/home/header";
 import Calendar from "@/components/home/calendar";
 import { useCallback, useState } from "react";
+import { HomeProvider } from "@/context/home/HomeState";
 
 const wait = (timeout: number) => {
     return new Promise((resolve) => {
@@ -19,36 +20,38 @@ const Home = () => {
     }, []);
 
     return (
-        <SafeAreaView style={{ paddingTop: 24 }}>
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            >
-                <View
-                    style={{
-                        paddingTop: 20,
-                        backgroundColor: "white",
-                        height: "100%",
-                        width: "100%",
-                    }}
+        <HomeProvider>
+            <SafeAreaView style={{ paddingTop: 24 }}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 >
                     <View
                         style={{
-                            flexDirection: "column",
-                            rowGap: 10,
+                            paddingTop: 20,
+                            backgroundColor: "white",
+                            height: "100%",
+                            width: "100%",
                         }}
                     >
-                        <Header title="Kabar Terbaru" />
-                        <CourselNews />
-                        <Calendar />
+                        <View
+                            style={{
+                                flexDirection: "column",
+                                rowGap: 10,
+                            }}
+                        >
+                            <Header title="Kabar Terbaru" />
+                            <CourselNews />
+                            <Calendar />
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                </ScrollView>
+            </SafeAreaView>
+        </HomeProvider>
     );
 };
 

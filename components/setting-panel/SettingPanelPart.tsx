@@ -177,6 +177,7 @@ const AccountInformation = () => {
             {accountData.map((item, index) => {
                 return (
                     <View
+                        key={index}
                         style={{
                             flexDirection: "row",
                             columnGap: 4,
