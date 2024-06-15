@@ -1,8 +1,29 @@
 import { Tabs } from "expo-router";
-import { Image, StyleSheet } from "react-native";
+import { BackHandler, Image, StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { useEffect, useState } from "react";
 
 const TabsLayout = () => {
+    useEffect(() => {
+        const handleBackPress = () => {
+            minimizeApp(); // Panggil fungsi minimize ketika tombol kembali ditekan
+            return true; // Event tidak menyebar
+        };
+
+        BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+
+        return () => {
+            BackHandler.removeEventListener(
+                "hardwareBackPress",
+                handleBackPress
+            );
+        };
+    }, []);
+    
+    const minimizeApp = () => {
+        BackHandler.exitApp();
+    };
+
     return (
         <Tabs>
             <Tabs.Screen

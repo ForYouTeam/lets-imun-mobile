@@ -49,7 +49,10 @@ export default function RootLayout() {
                 value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
             >
                 <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                    />
                     <Stack.Screen name="+not-found" />
                     <Stack.Screen name="login" />
                 </Stack>
