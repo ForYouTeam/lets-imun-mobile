@@ -1,14 +1,29 @@
-import { Link } from "expo-router"
-import { Text, View } from "react-native"
+import Header from "@/components/home/header";
+import SettingPanelPart from "@/components/setting-panel/SettingPanelPart";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
 const SettingUser = () => {
     return (
-        <View style={{
-            paddingTop: 50,
-            flexDirection: 'row',
-        }}>
-        </View>
-    )
-}
+        <SafeAreaView
+            style={{
+                paddingTop: 20,
+                width: "100%",
+                height: "100%",
+            }}
+        >
+            <ScrollView
+                style={{
+                    paddingVertical: 24,
+                    backgroundColor: "white",
+                    flexDirection: "column",
+                    rowGap: 10,
+                }}
+            >
+                <Header title="Pengaturan" hideNotifButton={true} />
+                <SettingPanelPart />
+            </ScrollView>
+        </SafeAreaView>
+    );
+};
 
-export default SettingUser
+export default SettingUser;

@@ -1,15 +1,33 @@
-import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
 import CourselNews from "@/components/courselNews";
 import Header from "@/components/home/header";
 import Calendar from "@/components/home/calendar";
+import { useCallback, useState } from "react";
+
+const wait = (timeout: number) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+    });
+};
 
 const Home = () => {
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
     return (
         <SafeAreaView style={{ paddingTop: 24 }}>
-            <StatusBar style="auto" />
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 <View
                     style={{
                         paddingTop: 20,
@@ -24,7 +42,7 @@ const Home = () => {
                             rowGap: 10,
                         }}
                     >
-                        <Header />
+                        <Header title="Kabar Terbaru" />
                         <CourselNews />
                         <Calendar />
                     </View>
