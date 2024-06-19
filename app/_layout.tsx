@@ -12,8 +12,10 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CustomSplashScreen from "@/components/customeSplashScreen";
 import { GlobalProvider } from "@/context/GlobalState";
-import { RequestNotificationPermission } from "@/utils/RequestPermission";
 import { HandlerNotification } from "@/services/other/HandlerNotification";
+import { GetFcmToken } from "@/utils/GetFcmToken";
+import * as Notifications from "expo-notifications";
+import { presentNotification } from "@/services/other/PresentNotifications";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,15 +36,45 @@ export default function RootLayout() {
     });
     const [isAppReady, setIsAppReady] = useState(false);
 
+    const handleNotificationResponse = (
+        response: Notifications.NotificationResponse
+    ) => {
+        console.log("Notification response received: ", response);
+    };
+
     useEffect(() => {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+              shouldShowAlert: true,
+              shouldPlaySound: true,
+              shouldSetBadge: true,
+            }),
+        });
         if (loaded) {
             SplashScreen.hideAsync();
             setTimeout(() => {
                 setIsAppReady(true);
-                RequestNotificationPermission();
-                HandlerNotification();
+                // HandlerNotification();
+                const token = GetFcmToken();
+                token
+                    .then((res) => {
+                        console.log("Token : ", res);
+                    })
+                    .catch((err) => {
+                        console.log("Error : ", err);
+                    });
             }, 3000);
         }
+        // Mendaftarkan listener untuk menangani notifikasi
+        const subscription =
+            Notifications.addNotificationResponseReceivedListener(
+                handleNotificationResponse
+            );
+
+        return () => {
+            // Membersihkan listener saat komponen unmount
+            subscription.remove();
+        };
     }, [loaded]);
 
     if (!loaded || !isAppReady) {
@@ -60,7 +92,10 @@ export default function RootLayout() {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen name="+not-found" />
-                    <Stack.Screen name="login" options={{ headerShown: false }} />
+                    <Stack.Screen
+                        name="login"
+                        options={{ headerShown: false }}
+                    />
                 </Stack>
             </ThemeProvider>
         </GlobalProvider>

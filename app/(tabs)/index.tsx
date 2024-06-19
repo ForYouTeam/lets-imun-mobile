@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, View, useColorScheme } from "react-native";
 import CourselNews from "@/components/courselNews";
 import Header from "@/components/home/header";
 import Calendar from "@/components/home/calendar";
@@ -13,6 +13,7 @@ const wait = (timeout: number) => {
 };
 
 const Home = () => {
+    const colorScheme = useColorScheme();
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -21,7 +22,7 @@ const Home = () => {
 
     return (
         <HomeProvider>
-            <SafeAreaView style={{ paddingTop: 24 }}>
+            <SafeAreaView style={{ paddingTop: colorScheme === "dark" ? 40 : 40 }}>
                 <ScrollView
                     refreshControl={
                         <RefreshControl
