@@ -1,5 +1,7 @@
+import { presentNotification } from "@/services/other/PresentNotifications";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import * as Linking from "expo-linking";
 
 interface HeaderProps {
     title: string;
@@ -27,7 +29,11 @@ const Header = (headerProps: HeaderProps) => {
                 {headerProps.title}
             </Text>
             {!headerProps.hideNotifButton && (
-                <View
+                <TouchableOpacity
+                    onPress={() => {
+                        presentNotification("Testing", "Notification body testing", 10, 'logging', 'reportPanel');
+                    }}
+                    activeOpacity={0.8}
                     style={{
                         backgroundColor: "#F7F7F7",
                         flexDirection: "row",
@@ -46,7 +52,7 @@ const Header = (headerProps: HeaderProps) => {
                         }}
                         source={require("@/assets/images/bell.png")}
                     />
-                </View>
+                </TouchableOpacity>
             )}
         </View>
     );

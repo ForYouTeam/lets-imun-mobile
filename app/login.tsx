@@ -1,12 +1,13 @@
 import { Image, SafeAreaView, KeyboardAvoidingView, Text, TextInput, View, Platform, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Colors } from "@/constants/Colors";
 
 export default function App() {
 
     return (
-        <View>
-            <StatusBar style="dark" />
+        <View style={{
+            paddingTop: Platform.OS === 'android' ? 25 : 0,
+        }}>
+            <StatusBar style="auto" />
             <SafeAreaView style={{
                 backgroundColor: 'white',
                 flexDirection: 'column',
@@ -56,7 +57,7 @@ export default function App() {
                                     paddingVertical: 11,
                                     borderRadius: 14,
                                     fontSize: 16,
-                                    borderColor: Colors.outLine,
+                                    borderColor: 'grey',
                                 }} placeholder="Cth: example@mail.com" />
                             </View>
                             <View style={{
@@ -72,7 +73,7 @@ export default function App() {
                                         paddingHorizontal: 16,
                                         paddingVertical: 11,
                                         borderRadius: 14,
-                                        borderColor: Colors.outLine,
+                                        borderColor: 'grey',
                                     }}>
                                     <TextInput style={{
                                         fontSize: 16,

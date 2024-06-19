@@ -12,9 +12,13 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CustomSplashScreen from "@/components/customeSplashScreen";
 import { GlobalProvider } from "@/context/GlobalState";
+import { RequestNotificationPermission } from "@/utils/RequestPermission";
+import { HandlerNotification } from "@/services/other/HandlerNotification";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// Request required permissions
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -35,6 +39,8 @@ export default function RootLayout() {
             SplashScreen.hideAsync();
             setTimeout(() => {
                 setIsAppReady(true);
+                RequestNotificationPermission();
+                HandlerNotification();
             }, 3000);
         }
     }, [loaded]);
@@ -54,7 +60,7 @@ export default function RootLayout() {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen name="+not-found" />
-                    <Stack.Screen name="login" />
+                    <Stack.Screen name="login" options={{ headerShown: false }} />
                 </Stack>
             </ThemeProvider>
         </GlobalProvider>
