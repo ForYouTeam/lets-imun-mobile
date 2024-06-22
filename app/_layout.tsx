@@ -12,10 +12,9 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CustomSplashScreen from "@/components/customeSplashScreen";
 import { GlobalProvider } from "@/context/GlobalState";
-import { HandlerNotification } from "@/services/other/HandlerNotification";
-import { GetFcmToken } from "@/utils/GetFcmToken";
+import { getFcmToken } from "@/utils/GetFcmToken";
 import * as Notifications from "expo-notifications";
-import { presentNotification } from "@/services/other/PresentNotifications";
+import { HandlerNotification } from "@/services/other/HandlerNotification";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -36,45 +35,24 @@ export default function RootLayout() {
     });
     const [isAppReady, setIsAppReady] = useState(false);
 
-    const handleNotificationResponse = (
-        response: Notifications.NotificationResponse
-    ) => {
-        console.log("Notification response received: ", response);
-    };
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+        }),
+    });
 
     useEffect(() => {
-        Notifications.setNotificationHandler({
-            handleNotification: async () => ({
-              shouldShowAlert: true,
-              shouldPlaySound: true,
-              shouldSetBadge: true,
-            }),
-        });
         if (loaded) {
             SplashScreen.hideAsync();
             setTimeout(() => {
+                HandlerNotification();
                 setIsAppReady(true);
-                // HandlerNotification();
-                const token = GetFcmToken();
-                token
-                    .then((res) => {
-                        console.log("Token : ", res);
-                    })
-                    .catch((err) => {
-                        console.log("Error : ", err);
-                    });
             }, 3000);
         }
-        // Mendaftarkan listener untuk menangani notifikasi
-        const subscription =
-            Notifications.addNotificationResponseReceivedListener(
-                handleNotificationResponse
-            );
 
-        return () => {
-            // Membersihkan listener saat komponen unmount
-            subscription.remove();
-        };
+        getFcmToken();
     }, [loaded]);
 
     if (!loaded || !isAppReady) {

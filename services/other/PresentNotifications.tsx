@@ -7,14 +7,6 @@ export const presentNotification = async (
     channelId: string,
     url?: string
 ): Promise<void> => {
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true,
-        }),
-    });
-
     const contentWithUrl = {
         title: title,
         body: body + " " + url,

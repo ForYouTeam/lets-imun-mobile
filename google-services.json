@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "649177553098",
+    "project_id": "cherrypie-learning-firebase",
+    "storage_bucket": "cherrypie-learning-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649177553098:android:8b2d57beb60388bd957c33",
+        "android_client_info": {
+          "package_name": "letsimun.letdeploy.my.id"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUnZlgg3s9JsSewM6R44GIWIIsp82qjaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

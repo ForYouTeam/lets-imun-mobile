@@ -5,9 +5,11 @@ export const HandlerNotification = () => {
     let isMounted = true;
 
     function redirect(notification: Notifications.Notification) {
-      const url = notification.request.content.data?.url;
-      if (url) {
-        router.push(url);
+      const data = notification.request.content.data;
+      if (data.url) {
+        router.push(data.url);
+        console.log(data);
+        
       }
     }
 
