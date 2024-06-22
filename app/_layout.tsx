@@ -118,6 +118,10 @@ export default function RootLayout() {
                         name="login"
                         options={{ headerShown: false }}
                     />
+                     <Stack.Screen
+                        name="register"
+                        options={{ headerShown: false }}
+                    />
                 </Stack>
             </ThemeProvider>
         </GlobalProvider>

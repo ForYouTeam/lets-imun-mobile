@@ -1,8 +1,24 @@
-import { Image, SafeAreaView, KeyboardAvoidingView, Text, TextInput, View, Platform, ScrollView, TouchableOpacity } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { getToken } from "@/utils/StoreToken";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-export default function Login() {
+export default function Register() {
+    useEffect(() => {
+        getToken()
+            .then(({ data, error }) => {
+                if (error) {
+                    console.log(error);
+                }
+                if (data && data.length > 0) {
+                    console.log(data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <View style={{
@@ -21,7 +37,7 @@ export default function Login() {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}>
                     <ScrollView>
-                        <View style={{
+                    <View style={{
                             flexDirection: 'column',
                             width: '100%',
                             height: 160,
@@ -29,20 +45,14 @@ export default function Login() {
                             alignItems: 'center',
                             paddingVertical: 16,
                             rowGap: 8,
-                            marginTop: 50,
+                            marginTop: 20,
                         }}>
                             <Text style={{
                                 fontSize: 32,
                                 fontWeight: 'bold',
-                                marginTop: 16,
+                                marginTop: 61,
                                 textAlign: 'center',
-                            }}>Silahkan Masuk</Text>
-                            <Text style={{
-                                fontSize: 16,
-                                textAlign: 'center',
-                                width: '80%',
-                                lineHeight: 24,
-                            }}>Jaga kesehatan bunda dan anak. Jangan lupa ke posyandu terdekat yah.</Text>
+                            }}>Daftar</Text>
                         </View>
                         <View style={{ flexDirection: 'column', rowGap: 20 }}>
                             <View style={{
@@ -83,6 +93,28 @@ export default function Login() {
                                     <Image style={{ position: 'absolute', bottom: 14, right: 16, height: 21, width: 21 }} source={require('@/assets/images/visibility.png')} />
                                 </View>
                             </View>
+                            <View style={{
+                                paddingHorizontal: 21,
+                                flexDirection: 'column',
+                                rowGap: 6,
+                                position: 'relative',
+                            }}>
+                                <Text style={{ paddingStart: 4, fontSize: 13, fontWeight: '600' }}>Konfirmasi Password</Text>
+                                <View style={{
+                                        height: 'auto',
+                                        borderWidth: 1,
+                                        paddingHorizontal: 16,
+                                        paddingVertical: 11,
+                                        borderRadius: 14,
+                                        borderColor: 'grey',
+                                    }}>
+                                    <TextInput style={{
+                                        fontSize: 16,
+                                        width: '90%',
+                                    }} placeholder="Cth: example@mail.com" />
+                                    <Image style={{ position: 'absolute', bottom: 14, right: 16, height: 21, width: 21 }} source={require('@/assets/images/visibility.png')} />
+                                </View>
+                            </View>
                         </View>
                         <View style={{ paddingHorizontal: 21, marginTop: 52, width: '100%' }}>
                             <View style={{ 
@@ -95,16 +127,16 @@ export default function Login() {
                                 borderRadius: 14
                             }}>
                                 <Text style={{ fontSize: 18, fontWeight: '700', color: 'white' }}>
-                                    Login
+                                    Buat Akun
                                 </Text>
                             </View>
                         </View>
                         <View style={{ marginTop: 11, flexDirection: 'row', justifyContent: 'center', columnGap: 4 }}>
-                            <Text style={{ textAlign: 'center', color: 'grey', fontSize: 14 }}>Belum punya akun?</Text>
+                            <Text style={{ textAlign: 'center', color: 'grey', fontSize: 14 }}>Sudah punya akun?</Text>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                router.push('register');
+                                router.push('login');
                             }}>
-                                <Text style={{ textAlign: 'center', color: '#003285', fontSize: 14 }}>Daftar</Text>
+                                <Text style={{ textAlign: 'center', color: '#003285', fontSize: 14 }}>Masuk</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
