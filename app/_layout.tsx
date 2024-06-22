@@ -6,7 +6,7 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -43,16 +43,36 @@ export default function RootLayout() {
         }),
     });
 
+    const [notification, setNotification] = useState<
+        Notifications.Notification | undefined
+    >(undefined);
+    const notificationListener = useRef<Notifications.Subscription>();
+    const responseListener = useRef<Notifications.Subscription>();
+
     useEffect(() => {
+        getFcmToken();
+
         if (loaded) {
             SplashScreen.hideAsync();
+            notificationListener.current =
+                Notifications.addNotificationReceivedListener(
+                    (notification) => {
+                        setNotification(notification);
+                        console.log(notification);
+                    }
+                );
+
+            responseListener.current =
+                Notifications.addNotificationResponseReceivedListener(
+                    (response) => {
+                        console.log(response);
+                    }
+                );
             setTimeout(() => {
                 HandlerNotification();
                 setIsAppReady(true);
             }, 3000);
         }
-
-        getFcmToken();
     }, [loaded]);
 
     if (!loaded || !isAppReady) {

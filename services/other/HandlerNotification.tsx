@@ -9,7 +9,6 @@ export const HandlerNotification = () => {
       if (data.url) {
         router.push(data.url);
         console.log(data);
-        
       }
     }
 

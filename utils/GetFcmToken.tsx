@@ -17,7 +17,7 @@ async function registerForPushNotificationsAsync() {
     token = (await Notifications.getExpoPushTokenAsync()).data;
 
     if (Platform.OS === "android") {
-        Notifications.setNotificationChannelAsync("default", {
+        Notifications.setNotificationChannelAsync("fcm", {
             name: "default",
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],

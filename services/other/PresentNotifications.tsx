@@ -10,7 +10,8 @@ export const presentNotification = async (
     const contentWithUrl = {
         title: title,
         body: body + " " + url,
-        data: { url: url, channelId: channelId },
+        channelId: channelId,
+        data: { url: url },
     };
 
     const contentWithoutUrl = {

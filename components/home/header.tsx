@@ -31,7 +31,7 @@ const Header = (headerProps: HeaderProps) => {
             {!headerProps.hideNotifButton && (
                 <TouchableOpacity
                     onPress={() => {
-                        presentNotification("Testing", "Notification body testing", 10, 'logging', 'reportPanel');
+                        presentNotification("Testing", "Notification body testing", 10, 'scheduler', 'reportPanel');
                     }}
                     activeOpacity={0.8}
                     style={{
