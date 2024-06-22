@@ -1,10 +1,36 @@
-import { Tabs } from "expo-router";
+import { Tabs, router, useNavigation } from "expo-router";
 import { BackHandler, Image, StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
+import { useGlobal } from "@/context/GlobalState";
+import { getProfile } from "@/services/profile";
+import { IResponseData } from "@/services/type";
 
 const TabsLayout = () => {
+    const [isComponentMounted, setIsComponentMounted] = useState(false);
+    const { isAuthenticated, setAuthenticated } = useGlobal();
+    const navigation = useNavigation();
+
+    const fetchingData = async () => {
+        const { data, error } = await getProfile();
+        if (error) {
+            console.log(error);
+            return;
+        }
+
+        if (data) {
+            const dataResponse: IResponseData = data;
+            if (dataResponse.status != 200) {
+                setAuthenticated(true);
+            }
+        }
+    };
+
     useEffect(() => {
+        setIsComponentMounted(true);
+
+        fetchingData();
+
         const handleBackPress = () => {
             minimizeApp(); // Panggil fungsi minimize ketika tombol kembali ditekan
             return true; // Event tidak menyebar
@@ -19,7 +45,13 @@ const TabsLayout = () => {
             );
         };
     }, []);
-    
+
+    useEffect(() => {
+        if (isComponentMounted && !isAuthenticated) {
+            router.push("login"); // Gunakan navigation.push untuk navigasi ke halaman login setelah komponen terpasang
+        }
+    }, [isComponentMounted, isAuthenticated, navigation]);
+
     const minimizeApp = () => {
         BackHandler.exitApp();
     };

@@ -5,9 +5,10 @@ const GlobalContext = createContext<TGlobalContextType | undefined>(undefined);
 
 export const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoading, setLoading] = useState<boolean>(false);
+    const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
 
     return (
-        <GlobalContext.Provider value={{ isLoading, setLoading }}>
+        <GlobalContext.Provider value={{ isLoading, setLoading, isAuthenticated, setAuthenticated }}>
             {children}
         </GlobalContext.Provider>
     );

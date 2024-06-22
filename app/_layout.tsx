@@ -4,7 +4,7 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useRef, useState } from "react";
 import "react-native-reanimated";
@@ -15,6 +15,7 @@ import { GlobalProvider } from "@/context/GlobalState";
 import { getFcmToken } from "@/utils/GetFcmToken";
 import * as Notifications from "expo-notifications";
 import { HandlerNotification } from "@/services/other/HandlerNotification";
+import { getToken } from "@/utils/StoreToken";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,6 +35,7 @@ export default function RootLayout() {
         InterRegular: require("../assets/fonts/Inter-Regular.ttf"),
     });
     const [isAppReady, setIsAppReady] = useState(false);
+    const [mount, setMount] = useState(false);
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -49,7 +51,9 @@ export default function RootLayout() {
     const notificationListener = useRef<Notifications.Subscription>();
     const responseListener = useRef<Notifications.Subscription>();
 
+    const [isAuth, setAuth] = useState(false);
     useEffect(() => {
+        setMount(true);
         getFcmToken();
 
         if (loaded) {
@@ -68,12 +72,32 @@ export default function RootLayout() {
                         console.log(response);
                     }
                 );
-            setTimeout(() => {
-                HandlerNotification();
-                setIsAppReady(true);
-            }, 3000);
+
+              getToken().then(({data, error}) => {
+                if (error) {
+                    console.log(error);
+                    setAuth(false);
+                }
+                if (data && data.length > 0) {
+                    setAuth(true);
+                } else {
+                    setAuth(false);
+                }
+              })
+              .catch((e) => {console.log(e);
+              });    
         }
     }, [loaded]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            HandlerNotification();
+            setIsAppReady(true);
+            if (!isAuth && mount) {
+                router.push("login");
+            }
+        }, 3000);
+    }, [isAuth, mount]);
 
     if (!loaded || !isAppReady) {
         return <CustomSplashScreen />;

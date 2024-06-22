@@ -5,7 +5,7 @@ export default function App() {
 
     return (
         <View style={{
-            paddingTop: Platform.OS === 'android' ? 25 : 0,
+            paddingTop: Platform.OS === 'android' ? 40 : 0,
         }}>
             <StatusBar style="auto" />
             <SafeAreaView style={{
