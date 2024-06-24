@@ -1,8 +1,7 @@
+import { RegisterForm } from "@/components/auth/RegisterForm";
+import { RegisterProvider } from "@/context/auth/RegisterState";
 import { getToken } from "@/utils/StoreToken";
-import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function Register() {
     useEffect(() => {
@@ -21,127 +20,8 @@ export default function Register() {
     }, []);
 
     return (
-        <View style={{
-            paddingTop: Platform.OS === 'android' ? 40 : 0,
-        }}>
-            <StatusBar style="auto" />
-            <SafeAreaView style={{
-                backgroundColor: 'white',
-                flexDirection: 'column',
-                height: '100%',
-                rowGap: 8,
-                position: 'relative',
-            }}>
-
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={{ flex: 1 }}>
-                    <ScrollView>
-                    <View style={{
-                            flexDirection: 'column',
-                            width: '100%',
-                            height: 160,
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            paddingVertical: 16,
-                            rowGap: 8,
-                            marginTop: 20,
-                        }}>
-                            <Text style={{
-                                fontSize: 32,
-                                fontWeight: 'bold',
-                                marginTop: 61,
-                                textAlign: 'center',
-                            }}>Daftar</Text>
-                        </View>
-                        <View style={{ flexDirection: 'column', rowGap: 20 }}>
-                            <View style={{
-                                paddingHorizontal: 21,
-                                flexDirection: 'column',
-                                rowGap: 6,
-                            }}>
-                                <Text style={{ paddingStart: 4, fontSize: 13, fontWeight: '600' }}>E-mail</Text>
-                                <TextInput style={{
-                                    height: 'auto',
-                                    borderWidth: 1,
-                                    paddingHorizontal: 16,
-                                    paddingVertical: 11,
-                                    borderRadius: 14,
-                                    fontSize: 16,
-                                    borderColor: 'grey',
-                                }} placeholder="Cth: example@mail.com" />
-                            </View>
-                            <View style={{
-                                paddingHorizontal: 21,
-                                flexDirection: 'column',
-                                rowGap: 6,
-                                position: 'relative',
-                            }}>
-                                <Text style={{ paddingStart: 4, fontSize: 13, fontWeight: '600' }}>Password</Text>
-                                <View style={{
-                                        height: 'auto',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 11,
-                                        borderRadius: 14,
-                                        borderColor: 'grey',
-                                    }}>
-                                    <TextInput style={{
-                                        fontSize: 16,
-                                        width: '90%',
-                                    }} placeholder="Cth: example@mail.com" />
-                                    <Image style={{ position: 'absolute', bottom: 14, right: 16, height: 21, width: 21 }} source={require('@/assets/images/visibility.png')} />
-                                </View>
-                            </View>
-                            <View style={{
-                                paddingHorizontal: 21,
-                                flexDirection: 'column',
-                                rowGap: 6,
-                                position: 'relative',
-                            }}>
-                                <Text style={{ paddingStart: 4, fontSize: 13, fontWeight: '600' }}>Konfirmasi Password</Text>
-                                <View style={{
-                                        height: 'auto',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 11,
-                                        borderRadius: 14,
-                                        borderColor: 'grey',
-                                    }}>
-                                    <TextInput style={{
-                                        fontSize: 16,
-                                        width: '90%',
-                                    }} placeholder="Cth: example@mail.com" />
-                                    <Image style={{ position: 'absolute', bottom: 14, right: 16, height: 21, width: 21 }} source={require('@/assets/images/visibility.png')} />
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{ paddingHorizontal: 21, marginTop: 52, width: '100%' }}>
-                            <View style={{ 
-                                flexDirection: 'row', 
-                                justifyContent: 'center', 
-                                width: '100%', 
-                                height: 'auto', 
-                                backgroundColor: '#003285',
-                                paddingVertical: 21, 
-                                borderRadius: 14
-                            }}>
-                                <Text style={{ fontSize: 18, fontWeight: '700', color: 'white' }}>
-                                    Buat Akun
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 11, flexDirection: 'row', justifyContent: 'center', columnGap: 4 }}>
-                            <Text style={{ textAlign: 'center', color: 'grey', fontSize: 14 }}>Sudah punya akun?</Text>
-                            <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                router.push('login');
-                            }}>
-                                <Text style={{ textAlign: 'center', color: '#003285', fontSize: 14 }}>Masuk</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </SafeAreaView>
-        </View>
+        <RegisterProvider>
+            <RegisterForm></RegisterForm>
+        </RegisterProvider>
     );
 }

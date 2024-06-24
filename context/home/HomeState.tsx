@@ -35,7 +35,7 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
 export const useHome = () => {
     const context = useContext(HomeContext);
     if (!context) {
-        throw new Error("useGlobal must be used within a GlobalProvider");
+        throw new Error("useGlobal must be used within a HomeProvider");
     }
     return context;
 };
