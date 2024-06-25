@@ -205,7 +205,7 @@ export const RegisterForm = () => {
                 onChangeText={(text) => {
                   handleInputChange("username", text);
                 }}
-                maxLength={25}
+                maxLength={150}
               />
             </View>
             <View
@@ -286,7 +286,7 @@ export const RegisterForm = () => {
                       width: 21,
                     }}
                     source={
-                      passwordVisibility
+                      !passwordVisibility
                         ? require("@/assets/images/visibility.png")
                         : require("@/assets/images/visibility-off.png")
                     }
@@ -372,7 +372,7 @@ export const RegisterForm = () => {
                       width: 21,
                     }}
                     source={
-                      cPasswordVisibility
+                      !cPasswordVisibility
                         ? require("@/assets/images/visibility.png")
                         : require("@/assets/images/visibility-off.png")
                     }
