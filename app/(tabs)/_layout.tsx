@@ -15,19 +15,24 @@ import CustomSplashScreen from "@/components/customeSplashScreen";
 
 const TabsLayout = () => {
     const [isComponentMounted, setIsComponentMounted] = useState(false);
-    const { isAuthenticated, setAuthenticated } = useGlobal();
+    const { isAuthenticated, setAuthenticated, setMemberStatus } = useGlobal();
 
     const fetchProfile = async () => {
         const { status, data, error } = await getProfile();
         if (status === 200) {
             setAuthenticated(true);
             setIsComponentMounted(true);
+            
+            setMemberStatus({
+                isVerify: data?.data?.is_verify as boolean || false,
+                status: data?.data?.is_verify as string || 'unverified'
+            })
         }
         if (status !== 200) {
             if (status === 401) {
                 setAuthenticated(false)
             }
-            console.log(data);
+            console.log(error);
         }
     };
 

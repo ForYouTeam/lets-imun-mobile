@@ -28,5 +28,6 @@ export const Colors = {
   success: '#46AF46',
   error: '#DE5339',
   primary: '#33CDCD',
-  secondary: '#404040'
+  secondary: '#404040',
+  Text: '#2F3645'
 };

@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import { TGlobalContextType } from "./types/GlobalType";
+import { IMemberStatus, TGlobalContextType } from "./types/GlobalType";
 
 const GlobalContext = createContext<TGlobalContextType | undefined>(undefined);
 
@@ -8,10 +8,14 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
+  const [memberStatus, setMemberStatus] = useState<IMemberStatus>({
+    isVerify: false,
+    status: 'unverified'
+  })
 
   return (
     <GlobalContext.Provider
-      value={{ isLoading, setLoading, isAuthenticated, setAuthenticated }}
+      value={{ isLoading, setLoading, isAuthenticated, setAuthenticated, memberStatus, setMemberStatus }}
     >
       {children}
     </GlobalContext.Provider>
