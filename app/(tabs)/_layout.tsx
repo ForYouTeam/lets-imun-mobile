@@ -24,6 +24,9 @@ const TabsLayout = () => {
             setIsComponentMounted(true);
         }
         if (status !== 200) {
+            if (status === 401) {
+                setAuthenticated(false)
+            }
             console.log(data);
         }
     };
