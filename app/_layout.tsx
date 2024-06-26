@@ -92,7 +92,7 @@ export default function RootLayout() {
     setTimeout(() => {
       HandlerNotification();
       setIsAppReady(true);
-    }, 3000);
+    }, 1000);
   }, [isAuth, mount]);
 
   if (!loaded || !isAppReady) {
