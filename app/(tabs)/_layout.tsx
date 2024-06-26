@@ -1,54 +1,57 @@
 import { Tabs, router, useNavigation } from "expo-router";
-import { BackHandler, Image, StyleSheet } from "react-native";
+import { AppState, AppStateStatus, BackHandler, Image, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useGlobal } from "@/context/GlobalState";
 import { getProfile } from "@/services/profile";
-import { IResponseData } from "@/services/type";
+import { IProfileServiceResponse } from "@/services/type";
+import Login from "../login";
+import CustomSplashScreen from "@/components/customeSplashScreen";
 
 const TabsLayout = () => {
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const { isAuthenticated, setAuthenticated } = useGlobal();
 
-  const fetchingData = async () => {
-    const { data, error } = await getProfile();
-    if (error) {
-      console.log("error profile: ", error);
-      return;
+  const fetchProfile = async () => {
+    const {status, data, error} = await getProfile()
+    if (status === 200) {
+      setAuthenticated(true)
     }
-
-    if (data) {
-      const dataResponse: IResponseData = data;
-      if (dataResponse.status != 200) {
-        setAuthenticated(false);
-      }
+    if (status !== 200) {
+      console.log(data);
     }
-  };
-
-  fetchingData();
+  }
 
   useEffect(() => {
-    setIsComponentMounted(true);
-    const handleBackPress = () => {
-      minimizeApp(); // Panggil fungsi minimize ketika tombol kembali ditekan
-      return true; // Event tidak menyebar
+    fetchProfile()
+
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        fetchProfile()
+      }
     };
 
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const handleBackPress = () => {
+          minimizeApp();
+          return true;
+        };
+    
+        BackHandler.addEventListener("hardwareBackPress", handleBackPress);
     return () => {
+      subscription.remove();
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
-  });
+  }, [])
 
-  const minimizeApp = () => {
+   const minimizeApp = () => {
     BackHandler.exitApp();
   };
 
-  useEffect(() => {
-    if (!isAuthenticated && isComponentMounted) {
-      router.push("/login");
-    }
-  }, [isAuthenticated, isComponentMounted]);
+  if (!isAuthenticated) {
+    return (
+      <Login />
+    )
+  }
 
   return (
     <Tabs>

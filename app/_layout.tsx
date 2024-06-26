@@ -16,6 +16,7 @@ import { getFcmToken } from "@/utils/GetFcmToken";
 import * as Notifications from "expo-notifications";
 import { HandlerNotification } from "@/services/other/HandlerNotification";
 import { getToken } from "@/utils/StoreToken";
+import { getProfile } from "@/services/profile";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

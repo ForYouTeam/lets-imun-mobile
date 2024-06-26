@@ -1,4 +1,6 @@
-export interface IResponseData {
-    status: number;
-    detail: any;
+export interface IProfileServiceResponse {
+    status : number | string,
+    message?: string,
+    data   : any,
+    error  : any
 }

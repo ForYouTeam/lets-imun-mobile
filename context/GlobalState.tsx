@@ -7,7 +7,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isAuthenticated, setAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
 
   return (
     <GlobalContext.Provider

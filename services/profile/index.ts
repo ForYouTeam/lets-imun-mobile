@@ -1,42 +1,45 @@
 import { getToken } from "@/utils/StoreToken";
-import { IResponseData } from "../type";
+import { IProfileServiceResponse } from "../type";
 
 const baseUrl = process.env.EXPO_PUBLIC_API_URL;
 
-export const getProfile = async () => {
-  // Fetch profile data
+export const getProfile = async (): Promise<IProfileServiceResponse> => {
+  // Fetch token data
   const { data, error } = await getToken();
   if (error) {
     return {
+      status: 401,
       data: null,
       error: error,
     };
   }
+  
   try {
-    console.log("token bearer: ", data);
-
-    const response = await fetch(baseUrl + "/v1/get-profile", {
+    const response = await fetch(`${baseUrl}/v1/get-profile`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + data,
+        Authorization: `Bearer ${data}`,
       },
     });
 
-    if (!response.ok && response.status !== 401) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      return {
+        status: response.status,
+        data: null,
+        error: new Error('Failed to fetch profile data'),
+      };
     }
 
-    const responseData: IResponseData = {
-      status: response.status,
-      detail: await response.json(),
-    };
-
+    const responseData = await response.json();
     return {
+      status: response.status,
       data: responseData,
       error: null,
     };
+
   } catch (error) {
     return {
+      status: 500,
       data: null,
       error: error,
     };
