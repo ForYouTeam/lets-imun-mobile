@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export interface IHomeCarousel {
     title      : string;
     description: string;
@@ -7,10 +9,13 @@ export interface IHomeCarousel {
 }
 
 export interface INews {
-    title      : string;
-    date       : string;
-    month      : string;
-    description: string;
+    id          : string;
+    title       : string;
+    time        : string;
+    image       : string | ImageSourcePropType;
+    description : string;
+    category    : string;
+    key        ?: string
 }
 
 export interface INewsPayload {
@@ -22,7 +27,6 @@ export type THomeCarousel = {
     setHomeCarousel: (homeCarousel: IHomeCarousel[]) => void;
     homeNews: INews[];
     setHomeNews: (homeNews: INews[]) => void;
-    getNewsByMonth: (month: string) => void;
 
     newsPayload: INewsPayload;
     setNewsPayload: (newsPayload: INewsPayload) => void;

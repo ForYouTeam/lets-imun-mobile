@@ -1,47 +1,45 @@
+import { useHome } from "@/context/home/HomeState";
+import { INews } from "@/context/types/HomeType";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ImageSourcePropType, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import Animated, { interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
-interface DataType {
-    title: string;
-    category: string;
-    img?: ImageSourcePropType;
-    key?: string;
-}
+// interface DataType {
+//     title: string;
+//     category: string;
+//     img?: ImageSourcePropType;
+//     key?: string;
+// }
 
 type SpacerType = {
     key: string;
 };
 
-const CourselNews = () => {
+interface INewsProps {
+    newsList: INews[] | []
+}
+
+const CourselNews: React.FC<INewsProps> = ({newsList}) => {
+
     const { width } = useWindowDimensions();
     const SIZE = width * 0.9;
     const SPACER = (width - SIZE) / 2;
 
-    const data: DataType[] = [
-        {
-            title: "Berita 1",
-            category: "acara",
-            img: require('@/assets/images/banner/example-1.png')
-        },
-        {
-            title: "Berita 2",
-            category: "tips",
-            img: require('@/assets/images/banner/example-2.jpg')
-        },
-        {
-            title: "Berita 3",
-            category: "info",
-            img: require('@/assets/images/banner/example-2.jpg')
-        }
-    ];
-
-    const [newData] = useState<(DataType | SpacerType)[]>([
+    const [newData, setNewData] = useState<(INews | SpacerType)[]>([
         { key: 'spacer-left' },
-        ...data,
+        ...(newsList || []),
         { key: 'spacer-right' }
     ]);
+    useEffect(() => {
+        if (newsList && newsList.length >= 1) {
+            setNewData([
+                { key: 'spacer-left' },
+                ...(newsList),
+                { key: 'spacer-right' }
+            ])
+        }
+    }, [])
 
     const x = useSharedValue(0);
     const onScroll = useAnimatedScrollHandler({
@@ -50,9 +48,11 @@ const CourselNews = () => {
         }
     });
 
-    const isDataType = (item: DataType | SpacerType): item is DataType => {
-        return (item as DataType).title !== undefined;
+    const isDataType = (item: INews | SpacerType): item is INews => {
+        return (item as INews).title !== undefined;
     };
+
+    console.log("ini child", newsList);
 
     return (
         <Animated.ScrollView
@@ -129,7 +129,7 @@ const CourselNews = () => {
                                 <Image resizeMode="cover" style={{
                                     height: '100%',
                                     width: '100%',
-                                }} source={item.img} />
+                                }} source={typeof item.image == 'string' ? { uri: item.image } : item.image} />
                             </View>
                             <Text style={{
                                 backgroundColor: 'white',

@@ -11,10 +11,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
     const [homeNews, setHomeNews] = useState<INews[]>([]);
     const [newsPayload, setNewsPayload] = useState({ month: getMonthName() });
 
-    const getNewsByMonth = (month: string) => {
-        return homeNews.filter((item) => item.month.includes(month));
-    };
-
     return (
         <HomeContext.Provider
             value={{
@@ -22,9 +18,8 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
                 setHomeCarousel,
                 homeNews,
                 setHomeNews,
-                getNewsByMonth,
                 newsPayload,
-                setNewsPayload
+                setNewsPayload,
             }}
         >
             {children}
