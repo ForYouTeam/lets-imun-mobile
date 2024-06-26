@@ -68,7 +68,7 @@ const ReportPanelPart = () => {
                         fontFamily: "InterRegular",
                     }}
                 >
-                    Pantau perkembangan anak.
+                    Status Anak.
                 </Text>
                 <View
                     style={{
