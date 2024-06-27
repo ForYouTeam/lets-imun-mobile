@@ -1,6 +1,6 @@
 
 export interface IVerifyPayload {
-    nik: string,
+    nik: string | number,
     name: string,
     email: string,
     phone: string,
