@@ -19,7 +19,7 @@ export const setToken = async (token: string): Promise<IResponse> => {
   }
 };
 
-export const clearToken = async (token: string): Promise<IResponse> => {
+export const clearToken = async (): Promise<IResponse> => {
   try {
     await AsyncStorage.clear();
     return {

@@ -19,7 +19,7 @@ import { getToken } from "@/utils/StoreToken";
 import { getProfile } from "@/services/profile";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 // Request required permissions
 
@@ -58,7 +58,6 @@ export default function RootLayout() {
     getFcmToken();
 
     if (loaded) {
-      SplashScreen.hideAsync();
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
           setNotification(notification);
@@ -85,18 +84,14 @@ export default function RootLayout() {
         .catch((e) => {
           console.log(e);
         });
+
+      HandlerNotification();
+      setIsAppReady(true);
     }
   }, [loaded]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      HandlerNotification();
-      setIsAppReady(true);
-    }, 1000);
-  }, [isAuth, mount]);
-
-  if (!loaded || !isAppReady) {
-    return <CustomSplashScreen />;
+  if (!loaded && !isAppReady) {
+    return null;
   }
 
   return (
