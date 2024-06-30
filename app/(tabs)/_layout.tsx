@@ -75,7 +75,9 @@ const TabsLayout = () => {
 
   if (isAuthenticated && isComponentMounted) {
     return (
-      <Tabs>
+      <Tabs screenOptions={{
+        tabBarHideOnKeyboard: true
+      }}>
         <Tabs.Screen
           name="index"
           options={{

@@ -1,4 +1,6 @@
 import { Input } from "@/components/form/input";
+import { InputFile } from "@/components/form/inputFile";
+import { TextArea } from "@/components/form/textArea";
 import Header from "@/components/home/header";
 import { Colors } from "@/constants/Colors";
 import { useReport } from "@/context/report/ReportState";
@@ -50,6 +52,8 @@ export default function Verify() {
                     </Text>
                 </View>
 
+                <InputFile label="Upload KTP" />
+                
                 <View
                     style={{
                         flexDirection: "column",
@@ -58,6 +62,7 @@ export default function Verify() {
                         height: "auto",
                         paddingHorizontal: 20,
                         marginTop: 20,
+                        paddingBottom: 40,
                     }}
                 >
                     <Input
@@ -98,6 +103,16 @@ export default function Verify() {
                         placeholder="Cth: 08210001200"
                         onChangeText={(text) => {
                             handleInputChange("email", text);
+                        }}
+                    />
+                    <TextArea
+                        required
+                        label="Alamat"
+                        type="text"
+                        value={verifyPayload.address}
+                        placeholder="Cth: Jl. Kijang"
+                        onChangeText={(text) => {
+                            handleInputChange("address", text);
                         }}
                     />
                 </View>

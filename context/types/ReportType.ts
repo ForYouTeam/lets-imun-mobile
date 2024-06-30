@@ -6,7 +6,7 @@ export interface IVerifyPayload {
     phone: string,
     gender: string,
     address: string,
-    img_document: File | null
+    img_document: string | null
 }
 
 export type TReportPannel = {

@@ -6,7 +6,7 @@ const SettingUser = () => {
     return (
         <SafeAreaView
             style={{
-                paddingTop: 20,
+                paddingTop: 40,
                 width: "100%",
                 height: "100%",
             }}

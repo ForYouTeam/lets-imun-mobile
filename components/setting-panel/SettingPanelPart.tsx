@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { useGlobal } from "@/context/GlobalState";
 import { clearToken } from "@/utils/StoreToken";
 import { router } from "expo-router";
 import {
@@ -221,11 +222,11 @@ const AccountInformation = () => {
 };
 
 const SettingPanelPart = () => {
+  const {setAuthenticated} = useGlobal()
+
   const logout = async () => {
-    const token = await clearToken();
-    if (token.data) {
-      router.push("/login");
-    }
+    await clearToken();
+    setAuthenticated(false)
   };
 
   return (
