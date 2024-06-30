@@ -8,9 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 export default function Login() {
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
   return (
     <View
       style={{

@@ -19,9 +19,8 @@ import { getToken } from "@/utils/StoreToken";
 import { getProfile } from "@/services/profile";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-// SplashScreen.preventAutoHideAsync();
-
 // Request required permissions
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

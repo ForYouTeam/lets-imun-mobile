@@ -15,6 +15,8 @@ import { AlertBadge } from "../misc/alert";
 import { loginProcess } from "@/services/auth/login";
 import { ILoginSuccessResponse } from "@/services/auth/type";
 import { setToken } from "@/utils/StoreToken";
+import * as SplashScreen from "expo-splash-screen";
+import { useGlobal } from "@/context/GlobalState";
 
 export const LoginForm = () => {
     const {
@@ -25,6 +27,8 @@ export const LoginForm = () => {
         clearPayload,
         isComplete,
     } = useLogin();
+
+    const { setAuthenticated } = useGlobal()
 
     const [alert, setAlert] = useState({
         active: false,
@@ -62,7 +66,7 @@ export const LoginForm = () => {
             setToken(member.data.token || "");
             setLoading(false);
 
-            router.push("/");
+            setAuthenticated(true)
         }
     };
 

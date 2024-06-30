@@ -14,8 +14,6 @@ import Login from "../login";
 import CustomSplashScreen from "@/components/customeSplashScreen";
 import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
-
 const TabsLayout = () => {
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const { isAuthenticated, setAuthenticated, setMemberStatus } = useGlobal();
@@ -36,6 +34,10 @@ const TabsLayout = () => {
       }
       console.log(error);
     }
+
+    setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 500);
   };
 
   useEffect(() => {
@@ -57,20 +59,11 @@ const TabsLayout = () => {
     };
 
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
     return () => {
       subscription.remove();
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated && isComponentMounted) {
-      setTimeout(() => {
-        SplashScreen.hideAsync();
-      }, 500);
-    }
-  }, [isAuthenticated, isComponentMounted]);
 
   const minimizeApp = () => {
     BackHandler.exitApp();
@@ -80,72 +73,74 @@ const TabsLayout = () => {
     return <Login />;
   }
 
-  return (
-    <Tabs>
-      <Tabs.Screen
-        name="index"
-        options={{
-          headerShown: false,
-          title: "Beranda",
-          tabBarIcon: ({ focused }) => (
-            <Image
-              style={styles.icon}
-              source={
-                focused
-                  ? require("@/assets/images/tabbar/home.png")
-                  : require("@/assets/images/tabbar/home-inactive.png")
-              }
-            />
-          ),
-          tabBarStyle: styles.tabBar,
-          tabBarInactiveTintColor: "#C7C8CC",
-          tabBarActiveTintColor: "#54808C",
-        }}
-      />
-      <Tabs.Screen
-        name="reportPanel"
-        options={{
-          headerShown: false,
-          title: "Laporan",
-          tabBarIcon: ({ focused }) => (
-            <Image
-              style={styles.icon}
-              source={
-                focused
-                  ? require("@/assets/images/tabbar/news.png")
-                  : require("@/assets/images/tabbar/news-inactive.png")
-              }
-            />
-          ),
-          tabBarStyle: styles.tabBar,
-          tabBarInactiveTintColor: "#C7C8CC",
-          tabBarActiveTintColor: "#54808C",
-          tabBarItemStyle: { paddingTop: 2 },
-        }}
-      />
-      <Tabs.Screen
-        name="settingUser"
-        options={{
-          headerShown: false,
-          title: "Akun",
-          tabBarIcon: ({ focused }) => (
-            <Image
-              style={styles.icon}
-              source={
-                focused
-                  ? require("@/assets/images/tabbar/account.png")
-                  : require("@/assets/images/tabbar/account-inactive.png")
-              }
-            />
-          ),
-          tabBarStyle: styles.tabBar,
-          tabBarInactiveTintColor: "#C7C8CC",
-          tabBarActiveTintColor: "#54808C",
-          tabBarItemStyle: { paddingTop: 2 },
-        }}
-      />
-    </Tabs>
-  );
+  if (isAuthenticated && isComponentMounted) {
+    return (
+      <Tabs>
+        <Tabs.Screen
+          name="index"
+          options={{
+            headerShown: false,
+            title: "Beranda",
+            tabBarIcon: ({ focused }) => (
+              <Image
+                style={styles.icon}
+                source={
+                  focused
+                    ? require("@/assets/images/tabbar/home.png")
+                    : require("@/assets/images/tabbar/home-inactive.png")
+                }
+              />
+            ),
+            tabBarStyle: styles.tabBar,
+            tabBarInactiveTintColor: "#C7C8CC",
+            tabBarActiveTintColor: "#54808C",
+          }}
+        />
+        <Tabs.Screen
+          name="reportPanel"
+          options={{
+            headerShown: false,
+            title: "Laporan",
+            tabBarIcon: ({ focused }) => (
+              <Image
+                style={styles.icon}
+                source={
+                  focused
+                    ? require("@/assets/images/tabbar/news.png")
+                    : require("@/assets/images/tabbar/news-inactive.png")
+                }
+              />
+            ),
+            tabBarStyle: styles.tabBar,
+            tabBarInactiveTintColor: "#C7C8CC",
+            tabBarActiveTintColor: "#54808C",
+            tabBarItemStyle: { paddingTop: 2 },
+          }}
+        />
+        <Tabs.Screen
+          name="settingUser"
+          options={{
+            headerShown: false,
+            title: "Akun",
+            tabBarIcon: ({ focused }) => (
+              <Image
+                style={styles.icon}
+                source={
+                  focused
+                    ? require("@/assets/images/tabbar/account.png")
+                    : require("@/assets/images/tabbar/account-inactive.png")
+                }
+              />
+            ),
+            tabBarStyle: styles.tabBar,
+            tabBarInactiveTintColor: "#C7C8CC",
+            tabBarActiveTintColor: "#54808C",
+            tabBarItemStyle: { paddingTop: 2 },
+          }}
+        />
+      </Tabs>
+    );
+  }
 };
 
 export default TabsLayout;
