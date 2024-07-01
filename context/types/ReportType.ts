@@ -12,4 +12,6 @@ export interface IVerifyPayload {
 export type TReportPannel = {
     verifyPayload: IVerifyPayload;
     setVerifyPayload: (payload: IVerifyPayload) => void;
+    loading: boolean,
+    setLoading: (payload: boolean) => void;
 }

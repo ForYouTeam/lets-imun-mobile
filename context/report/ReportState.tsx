@@ -13,14 +13,17 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({
         phone: "",
         name: "",
         nik: "",
-        img_document: null
+        img_document: null,
     });
+    const [loading, setLoading] = useState(false);
 
     return (
         <ReportContext.Provider
             value={{
                 verifyPayload,
-                setVerifyPayload
+                setVerifyPayload,
+                loading,
+                setLoading,
             }}
         >
             {children}

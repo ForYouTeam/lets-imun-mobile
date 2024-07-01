@@ -1,11 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { KeyboardTypeOptions, Text, TextInput, View } from "react-native";
 
 interface IInputProps {
     label: string;
     value: string | number;
-    type: string;
+    type?: KeyboardTypeOptions;
+    disabled: boolean;
     placeholder?: string;
     required?: boolean;
     errorMessage?: string;
@@ -15,10 +16,11 @@ interface IInputProps {
 export const Input: React.FC<IInputProps> = ({
     label,
     value,
-    type = "text",
+    type = "default",
     onChangeText,
     placeholder,
     required,
+    disabled,
     errorMessage,
 }) => {
     return (
@@ -59,7 +61,7 @@ export const Input: React.FC<IInputProps> = ({
                 value={String(value)}
                 onChangeText={onChangeText}
                 placeholder={placeholder || "Masukan " + label}
-                keyboardType={type === "number" ? "numeric" : "default"}
+                keyboardType={type}
                 style={{
                     borderWidth: 1,
                     paddingVertical: 6,
@@ -67,6 +69,7 @@ export const Input: React.FC<IInputProps> = ({
                     borderColor: "grey",
                     borderRadius: 11,
                 }}
+                editable={!disabled}
             />
         </View>
     );

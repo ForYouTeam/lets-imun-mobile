@@ -29,5 +29,5 @@ export const Colors = {
   error: '#DE5339',
   primary: '#33CDCD',
   secondary: '#404040',
-  Text: '#2F3645'
+  Text: '#2F3645',
 };
