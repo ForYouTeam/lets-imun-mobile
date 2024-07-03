@@ -1,5 +1,6 @@
 import { Input } from "@/components/form/input";
 import { InputFile } from "@/components/form/inputFile";
+import { Select } from "@/components/form/select";
 import { TextArea } from "@/components/form/textArea";
 import Header from "@/components/home/header";
 import { Colors } from "@/constants/Colors";
@@ -46,6 +47,10 @@ export default function Verify() {
   };
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const gender = [
+    { id: 1, label: "Laki-Laki", value: "man" },
+    { id: 2, label: "Perempuan", value: "woman" },
+  ];
 
   useEffect(() => {
     if (
@@ -129,6 +134,15 @@ export default function Verify() {
             onChangeText={(text) => {
               handleInputChange("name", text);
             }}
+          />
+          <Select
+            label="Jenis Kelamin"
+            data={gender}
+            onSelectText={(text) => {
+              handleInputChange("gender", text as string);
+            }}
+            value={verifyPayload.gender}
+            required
           />
           <Input
             disabled={loading}
