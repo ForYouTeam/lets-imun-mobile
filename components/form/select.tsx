@@ -67,6 +67,7 @@ export const Select: React.FC<ISelectProps> = ({
         }}
       >
         <Picker
+          enabled={!disabled}
           selectedValue={value}
           onValueChange={(itemValue) => onSelectText(itemValue)}
           placeholder={placeHolder}
@@ -74,6 +75,7 @@ export const Select: React.FC<ISelectProps> = ({
           style={{
             height: "auto",
             marginVertical: -5.5,
+            color: disabled ? '#C7C8CC' : 'black'
           }}
         >
           {!value ||

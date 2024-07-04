@@ -5,6 +5,7 @@ interface ITextAreaProps {
   label: string;
   value: string | number;
   type: string;
+  disabled?: boolean
   placeholder?: string;
   required?: boolean;
   errorMessage?: string;
@@ -16,6 +17,7 @@ export const TextArea: React.FC<ITextAreaProps> = ({
   value,
   type = "text",
   onChangeText,
+  disabled = false,
   placeholder,
   required,
   errorMessage,
@@ -55,6 +57,7 @@ export const TextArea: React.FC<ITextAreaProps> = ({
         )}
       </View>
       <TextInput
+        editable={!disabled}
         value={String(value)}
         onChangeText={onChangeText}
         placeholder={placeholder || "Masukan " + label}
@@ -72,6 +75,14 @@ export const TextArea: React.FC<ITextAreaProps> = ({
         }}
         multiline
       />
+      {errorMessage && (
+        <Text style={{
+          color: Colors.error,
+          fontSize: 11,
+          marginStart: 2,
+          marginTop: 3
+        }}>{ errorMessage }</Text>
+      )}
     </View>
   );
 };

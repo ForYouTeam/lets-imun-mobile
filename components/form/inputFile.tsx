@@ -8,9 +8,10 @@ import { useReport } from "@/context/report/ReportState";
 
 interface IInputFileProps {
   label: string;
+  errorMessage?: string
 }
 
-export const InputFile: React.FC<IInputFileProps> = ({ label }) => {
+export const InputFile: React.FC<IInputFileProps> = ({ label, errorMessage }) => {
   const [permission, requestPermission] =
     ImagePicker.useMediaLibraryPermissions();
   const { verifyPayload, setVerifyPayload } = useReport();
@@ -53,6 +54,14 @@ export const InputFile: React.FC<IInputFileProps> = ({ label }) => {
         overflow: "hidden",
       }}
     >
+      {errorMessage && (
+        <Text style={{
+          color: Colors.error,
+          fontSize: 14,
+          marginStart: 2,
+          marginTop: 3
+        }}>{ errorMessage }</Text>
+      )}
       {!verifyPayload.img_document && (
         <Image
           style={{

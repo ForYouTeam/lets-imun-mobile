@@ -9,7 +9,8 @@ interface IInputProps {
   disabled: boolean;
   placeholder?: string;
   required?: boolean;
-  errorMessage?: string;
+  errorMessage?: string[];
+  maxInput?: number;
   onChangeText: (text: string | number) => void;
 }
 
@@ -21,6 +22,7 @@ export const Input: React.FC<IInputProps> = ({
   placeholder,
   required,
   disabled,
+  maxInput,
   errorMessage,
 }) => {
   return (
@@ -58,6 +60,7 @@ export const Input: React.FC<IInputProps> = ({
         )}
       </View>
       <TextInput
+        maxLength={maxInput}
         value={String(value)}
         onChangeText={onChangeText}
         placeholder={placeholder || "Masukan " + label}
@@ -72,6 +75,14 @@ export const Input: React.FC<IInputProps> = ({
         }}
         editable={!disabled}
       />
+      {errorMessage && (
+        <Text style={{
+          color: Colors.error,
+          fontSize: 11,
+          marginStart: 2,
+          marginTop: 3
+        }}>{errorMessage[0]}</Text>
+      )}
     </View>
   );
 };
