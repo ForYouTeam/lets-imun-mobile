@@ -52,8 +52,6 @@ const CourselNews: React.FC<INewsProps> = ({newsList}) => {
         return (item as INews).title !== undefined;
     };
 
-    console.log("ini child", newsList);
-
     return (
         <Animated.ScrollView
             horizontal

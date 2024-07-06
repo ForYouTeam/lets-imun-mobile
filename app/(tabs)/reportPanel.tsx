@@ -4,16 +4,22 @@ import { ReportProvider } from "@/context/report/ReportState";
 import { useEffect } from "react";
 import { View } from "react-native";
 import Verify from "../verify";
+import { PendingStatus } from "@/components/report-panel/pendingStatus";
 
 const ReportPanel = () => {
     const { memberStatus } = useGlobal();
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        console.log("status member === :", memberStatus);
+        
+    }, [memberStatus]);
 
     return (
         <ReportProvider>
-            {!memberStatus.isVerify && <Verify />}
-            {memberStatus.isVerify && <ReportComp />}
+            {!memberStatus.isVerify && memberStatus.status  === "unverified" && <Verify />}
+            {!memberStatus.isVerify && memberStatus.status  === "pending" && <PendingStatus />}
+            {!memberStatus.isVerify && memberStatus.status  === "reject" && <Verify />}
+            {memberStatus.isVerify  && memberStatus.status  === "approve" && <ReportComp />}
         </ReportProvider>
     );
 };

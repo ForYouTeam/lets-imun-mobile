@@ -7,8 +7,11 @@ import { Colors } from "@/constants/Colors";
 import { useGlobal } from "@/context/GlobalState";
 import { useReport } from "@/context/report/ReportState";
 import { IVerifyPayload } from "@/context/types/ReportType";
+import { getProfile } from "@/services/profile";
+import { IProfileResponse } from "@/services/profile/type";
 import { sendVerify } from "@/services/report";
 import { IErrorResponseVerify } from "@/services/report/type";
+import { splitString } from "@/utils/GetSplitString";
 import { clearToken } from "@/utils/StoreToken";
 import { useEffect, useState } from "react";
 import {
@@ -22,14 +25,15 @@ import {
 } from "react-native";
 
 export default function Verify() {
-    const {setAuthenticated} = useGlobal()
+    const { setAuthenticated, memberStatus, setMemberStatus } = useGlobal();
     const { verifyPayload, setVerifyPayload, loading, setLoading } =
         useReport();
     const [disabled, setDisabled] = useState(true);
     const [disabledStyle, setdisabledStyle] = useState(
         StyleSheet.create(disabledBtn)
     );
-    const [errorValidation, setErrorValidation] = useState<IErrorResponseVerify>()
+    const [errorValidation, setErrorValidation] =
+        useState<IErrorResponseVerify>();
 
     const handleInputChange = (key: string, value: string | number) => {
         setVerifyPayload({
@@ -61,11 +65,29 @@ export default function Verify() {
     ];
 
     const clearErrorMessage = () => {
-        setErrorValidation({})
-    }
+        setErrorValidation({});
+    };
+
+    const getProfileInfo = async () => {
+        const { data, error, status } = await getProfile();
+        if (status === 401) {
+            clearToken();
+            setAuthenticated(false);
+            return null;
+        }
+
+        if (status !== 401 && status !== 200) {
+            console.log("Error when get profile");
+            return null;
+        }
+
+        return {
+            data,
+        };
+    };
 
     const verifyRequestSend = async () => {
-        clearErrorMessage()
+        clearErrorMessage();
         setLoading(true);
         setDisabledButton();
         const { status, data, error } = await sendVerify(verifyPayload);
@@ -74,15 +96,40 @@ export default function Verify() {
         console.log("Ini error: ", error);
 
         if (status === 401) {
-            clearToken()
-            setAuthenticated(false)
+            clearToken();
+            setAuthenticated(false);
         }
 
         if (status !== 401 && status !== 200) {
             const errorMsg = error as {
-                data: IErrorResponseVerify
+                data: IErrorResponseVerify;
+            };
+            setErrorValidation(errorMsg.data);
+        }
+
+        if (status === 200) {
+            const profile = await getProfileInfo();
+            if (profile) {
+                const dataProfile = (await getProfileInfo()) as {
+                    data: {
+                        data: IProfileResponse;
+                    };
+                };
+
+                const statusUser = splitString(dataProfile.data.data.status);
+                if (!dataProfile.data.data.is_verify) {
+                    setMemberStatus({
+                        isVerify: false,
+                        status: statusUser[0],
+                    });
+                    console.log(statusUser);
+                } else {
+                    setMemberStatus({
+                        isVerify: true,
+                        status: statusUser[0],
+                    });
+                }
             }
-            setErrorValidation(errorMsg.data)
         }
 
         setLoading(false);

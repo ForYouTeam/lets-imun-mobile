@@ -1,4 +1,4 @@
-import { Tabs, router, useNavigation } from "expo-router";
+import { Tabs } from "expo-router";
 import {
   AppState,
   AppStateStatus,
@@ -9,10 +9,9 @@ import {
 import { useEffect, useState } from "react";
 import { useGlobal } from "@/context/GlobalState";
 import { getProfile } from "@/services/profile";
-import { IProfileServiceResponse } from "@/services/type";
 import Login from "../login";
-import CustomSplashScreen from "@/components/customeSplashScreen";
 import * as SplashScreen from "expo-splash-screen";
+import { splitString } from "@/utils/GetSplitString";
 
 const TabsLayout = () => {
   const [isComponentMounted, setIsComponentMounted] = useState(false);
@@ -22,10 +21,10 @@ const TabsLayout = () => {
     const { status, data, error } = await getProfile();
     if (status === 200) {
       setAuthenticated(true);
-
+      const status = splitString(data.data.is_verify as string)
       setMemberStatus({
-        isVerify: (data?.data?.is_verify as boolean) || false,
-        status: (data?.data?.is_verify as string) || "unverified",
+        isVerify: data.data.is_verify as boolean,
+        status: status[0],
       });
     }
     if (status !== 200) {
