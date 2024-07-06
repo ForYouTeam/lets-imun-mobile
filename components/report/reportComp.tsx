@@ -10,7 +10,7 @@ export const ReportComp = () => {
                 width: "100%",
                 flexDirection: "column",
                 rowGap: 10,
-                paddingTop: 20,
+                paddingTop: "10%",
             }}
         >
             <ScrollView

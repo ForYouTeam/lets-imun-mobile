@@ -17,6 +17,8 @@ import { ILoginSuccessResponse } from "@/services/auth/type";
 import { setToken } from "@/utils/StoreToken";
 import * as SplashScreen from "expo-splash-screen";
 import { useGlobal } from "@/context/GlobalState";
+import { getProfile } from "@/services/profile";
+import { splitString } from "@/utils/GetSplitString";
 
 export const LoginForm = () => {
     const {
@@ -28,7 +30,7 @@ export const LoginForm = () => {
         isComplete,
     } = useLogin();
 
-    const { setAuthenticated } = useGlobal()
+    const { setAuthenticated, setMemberStatus } = useGlobal()
 
     const [alert, setAlert] = useState({
         active: false,
@@ -49,6 +51,25 @@ export const LoginForm = () => {
         });
     };
 
+    const fetchProfile = async () => {
+        const { status, data, error } = await getProfile();
+        if (status === 200) {
+          setAuthenticated(true);
+          const status = splitString(data.data.status as string)
+          
+          setMemberStatus({
+            isVerify: data.data.is_verify as boolean,
+            status: status[0],
+          });
+        }
+        if (status !== 200) {
+          if (status === 401) {
+            setAuthenticated(false);
+          }
+          console.log(error);
+        }
+      };
+
     const handleLogin = async () => {
         clearErrMsg();
         setLoading(true);
@@ -67,7 +88,9 @@ export const LoginForm = () => {
             setLoading(false);
 
             setAuthenticated(true)
+            fetchProfile()
         }
+        setLoading(false);
     };
 
     useEffect(() => {
