@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { View } from "react-native";
 import Verify from "../verify";
 import { PendingStatus } from "@/components/report-panel/pendingStatus";
+import { RejectStatus } from "@/components/report-panel/rejectStatus";
 
 const ReportPanel = () => {
     const { memberStatus } = useGlobal();
@@ -18,7 +19,7 @@ const ReportPanel = () => {
         <ReportProvider>
             {!memberStatus.isVerify && memberStatus.status  === "unverified" && <Verify />}
             {!memberStatus.isVerify && memberStatus.status  === "pending" && <PendingStatus />}
-            {!memberStatus.isVerify && memberStatus.status  === "reject" && <Verify />}
+            {!memberStatus.isVerify && memberStatus.status  === "reject" && <RejectStatus />}
             {memberStatus.isVerify  && memberStatus.status  === "approve" && <ReportComp />}
         </ReportProvider>
     );

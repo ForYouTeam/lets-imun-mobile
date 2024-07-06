@@ -21,7 +21,8 @@ const TabsLayout = () => {
     const { status, data, error } = await getProfile();
     if (status === 200) {
       setAuthenticated(true);
-      const status = splitString(data.data.is_verify as string)
+      const status = splitString(data.data.status as string)
+      
       setMemberStatus({
         isVerify: data.data.is_verify as boolean,
         status: status[0],

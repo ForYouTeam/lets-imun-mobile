@@ -1,7 +1,7 @@
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 import Header from "../home/header";
 
-export const PendingStatus = () => {
+export const RejectStatus = () => {
     return (
         <SafeAreaView
             style={{
@@ -27,11 +27,13 @@ export const PendingStatus = () => {
                     alignItems: 'center',
                     rowGap: 2
                 }}>
-                    <Image style={{width: 210, height: 210}} source={require('@/assets/images/waiting.png')} />
+                    <Image style={{width: 210, height: 210}} source={require('@/assets/images/reject.png')} />
                     <Text style={{
                         fontFamily: 'MontserratMedium',
-                        fontSize: 14
-                    }}>Verifikasi sedang diproses</Text>
+                        fontSize: 14,
+                        maxWidth: '70%',
+                        textAlign: 'center'
+                    }}>Verifikasi anda ditolak, hubungi puskesmas yang anda tuju.</Text>
                 </View>
             </ScrollView>
         </SafeAreaView>
