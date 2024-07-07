@@ -157,14 +157,14 @@ const CourselNews: React.FC<INewsProps> = ({newsList}) => {
                                     color: 'white',
                                     fontFamily: 'InterMedium',
                                 }}>
-                                    12 jam yang lalu
+                                    {item.time}
                                 </Text>
                                 <Text style={{
                                     fontSize: 13,
                                     color: 'white',
                                     fontFamily: 'InterRegular',
                                 }} numberOfLines={2} ellipsizeMode="tail">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. wwe ssdds
+                                    {item.title}
                                 </Text>
                             </View>
                         </Animated.View>
