@@ -4,12 +4,13 @@ import { useReport } from "@/context/report/ReportState";
 import { getReport } from "@/services/report";
 import { IReportResponse } from "@/services/report/type";
 import { splitString } from "@/utils/GetSplitString";
-import { useEffect } from "react";
-import { FlatList, Image, Text, View } from "react-native";
+import { isLoading } from "expo-font";
+import { useEffect, useState } from "react";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
 const ReportPanelPart = () => {
-    const {reportList, setReportList} = useReport()
-    const {setAuthenticated} = useGlobal()
+    const { reportList, setReportList, loading, setLoading } = useReport();
+    const { setAuthenticated } = useGlobal();
 
     const ImageGender = (gender: number) => {
         if (gender === 1) {
@@ -18,11 +19,47 @@ const ReportPanelPart = () => {
         return require("@/assets/images/icon/girl.png");
     };
 
+    const monthList = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+    ];
+
+    const currentDate = new Date();
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(
+        currentDate.getMonth()
+    );
+
+    const getCurrentMonthName = (index: number): string => monthList[index];
+
+    const nextMonth = async (): Promise<void> => {
+        setCurrentMonthIndex((prevIndex) => (prevIndex + 1) % monthList.length);
+    };
+
+    const prevMonth = async (): Promise<void> => {
+        setCurrentMonthIndex(
+            (prevIndex) => (prevIndex - 1 + monthList.length) % monthList.length
+        );
+    };
+
     const getReportList = async () => {
-        const {data, error, status} = await getReport('2024-07')
+        setLoading(true);
+        setReportList([])
+        const { data, error, status } = await getReport(
+            getCurrentMonthName(currentMonthIndex)
+        );
 
         if (!data && status === 401) {
-            setAuthenticated(false)
+            setAuthenticated(false);
         }
 
         if (status !== 200 && error) {
@@ -32,17 +69,20 @@ const ReportPanelPart = () => {
         if (status === 200 && data) {
             const result = data as {
                 data: {
-                    list: IReportResponse[]
-                }
-            }
-            setReportList(result.data.list)
-            console.log(reportList);
+                    list: IReportResponse[];
+                };
+            };
+            setReportList(result.data.list);
         }
-    }
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 100);
+    };
 
     useEffect(() => {
-        getReportList()
-    }, [])
+        getReportList();
+    }, [currentMonthIndex]);
     return (
         <View
             style={{
@@ -60,48 +100,129 @@ const ReportPanelPart = () => {
                     alignItems: "center",
                 }}
             >
-                <Text
-                    style={{
-                        fontSize: 14,
-                        fontFamily: "InterRegular",
-                    }}
-                >
-                    Status Anak.
-                </Text>
-                <View
-                    style={{
-                        paddingStart: 24,
-                        paddingEnd: 14,
-                        paddingVertical: 6,
-                        borderRadius: 50,
-                        backgroundColor: Colors.primary,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        columnGap: 8,
-                    }}
-                >
-                    <Text
+                <View style={{ paddingHorizontal: 10 }}>
+                    <View
                         style={{
-                            fontSize: 13,
-                            fontFamily: "InterRegular",
-                            color: "#FFF",
+                            paddingHorizontal: 10,
+                            paddingTop: 10,
+                            paddingBottom: 15,
+                            marginVertical: 24,
+                            flexDirection: "column",
+                            rowGap: 14,
+                            borderRadius: 8,
                         }}
                     >
-                        September
-                    </Text>
-                    <Image
-                        style={{
-                            width: 21,
-                            height: 21,
-                            marginTop: 2,
-                        }}
-                        source={require("@/assets/images/icon/white-down-arrow.png")}
-                    />
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                fontSize: 18,
+                                fontFamily: "InterRegular",
+                                color: Colors.Text,
+                            }}
+                        >
+                            Laporan Anak Bulanan
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-around",
+                                columnGap: 20,
+                                alignItems: "center",
+                            }}
+                        >
+                            <TouchableOpacity
+                                disabled={loading}
+                                onPress={() => {
+                                    prevMonth();
+                                }}
+                                activeOpacity={0.8}
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: 6,
+                                    borderRadius: 50,
+                                    backgroundColor: "white",
+                                    borderWidth: 1,
+                                    borderColor: Colors.primary,
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                    source={require("@/assets/images/tabbar/arrow-left.png")}
+                                />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    paddingVertical: 8,
+                                    paddingHorizontal: 32,
+                                    width: "70%",
+                                    borderRadius: 24,
+                                    backgroundColor: "#DAFFFB",
+                                    borderWidth: 1,
+                                    borderColor: Colors.primary,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        color: "#04364A",
+                                        fontFamily: "InterMedium",
+                                    }}
+                                >
+                                    {getCurrentMonthName(currentMonthIndex)}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                disabled={loading}
+                                onPress={() => {
+                                    nextMonth();
+                                }}
+                                activeOpacity={0.8}
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: 6,
+                                    borderRadius: 50,
+                                    backgroundColor: "white",
+                                    borderWidth: 1,
+                                    borderColor: Colors.primary,
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                    source={require("@/assets/images/tabbar/arrow-right.png")}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
             </View>
 
-            {reportList.map((item, index) => {
+            {loading && (
+                <Text
+                    style={{
+                        textAlign: "center",
+                        fontSize: 14,
+                        fontFamily: "InterRegular",
+                        color: Colors.Text,
+                    }}
+                >
+                    Mengambil Data...
+                </Text>
+            )}
+
+            {!loading && reportList.map((item, index) => {
                 return (
                     <View
                         key={index}
@@ -116,7 +237,7 @@ const ReportPanelPart = () => {
                                 fontSize: 18,
                                 fontFamily: "MontserratSemiBold",
                                 transform: [{ scaleY: 1.1 }],
-                                textTransform: 'capitalize'
+                                textTransform: "capitalize",
                             }}
                         >
                             {item.nama_anak}
@@ -189,7 +310,9 @@ const ReportPanelPart = () => {
                                             width: 80,
                                             height: 80,
                                         }}
-                                        source={ImageGender(item.jenis_kelamin == 'man' ? 1 : 2)}
+                                        source={ImageGender(
+                                            item.jenis_kelamin == "man" ? 1 : 2
+                                        )}
                                     />
                                 </View>
                                 <View
@@ -201,44 +324,70 @@ const ReportPanelPart = () => {
                                         width: "70%",
                                     }}
                                 >
-                                    {splitString(item.check_up).map((check, index2) => {
-                                        return (
-                                            <View
-                                                key={index2}
-                                                style={{
-                                                    flexDirection: "row",
-                                                    columnGap: 10,
-                                                    justifyContent:
-                                                        "space-between",
-                                                    alignItems: "center",
-                                                }}
-                                            >
-                                                <Text
+                                    {splitString(item.check_up).map(
+                                        (check, index2) => {
+                                            return (
+                                                <View
+                                                    key={index2}
                                                     style={{
-                                                        fontSize: 13,
-                                                        fontFamily:
-                                                            "InterRegular",
-                                                        color: "#04364A",
+                                                        flexDirection: "row",
+                                                        columnGap: 10,
+                                                        justifyContent:
+                                                            "space-between",
+                                                        alignItems: "center",
                                                     }}
                                                 >
-                                                    {check}
-                                                </Text>
-                                                <Image
-                                                    style={{
-                                                        width: 21,
-                                                        height: 21,
-                                                    }}
-                                                    source={require("@/assets/images/icon/check.png")}
-                                                />
-                                            </View>
-                                        );
-                                    })}
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 13,
+                                                            fontFamily:
+                                                                "InterRegular",
+                                                            color: "#04364A",
+                                                        }}
+                                                    >
+                                                        {check}
+                                                    </Text>
+                                                    <Image
+                                                        style={{
+                                                            width: 21,
+                                                            height: 21,
+                                                        }}
+                                                        source={require("@/assets/images/icon/check.png")}
+                                                    />
+                                                </View>
+                                            );
+                                        }
+                                    )}
                                 </View>
                             </View>
                         </View>
                     </View>
                 );
             })}
+
+            {reportList.length < 1 && !loading && (
+                <View
+                    style={{
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: 50,
+                    }}
+                >
+                    <Image
+                        style={{ height: 120, width: 120 }}
+                        source={require("@/assets/images/empty.jpg")}
+                    />
+                    <Text
+                        style={{
+                            fontFamily: "InterRegular",
+                            color: Colors.Text,
+                        }}
+                    >
+                        Laporan kosong
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };

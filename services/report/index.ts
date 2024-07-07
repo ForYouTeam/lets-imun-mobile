@@ -78,7 +78,7 @@ export const getReport = async (month: string): Promise<IServiceResponse> => {
   }
   
   try {
-    const response = await fetch(`${baseUrl}/v1/get-child-report?sort_month=${month}`, {
+    const response = await fetch(`${baseUrl}/v1/get-child-report?month=${month}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${data}`,
