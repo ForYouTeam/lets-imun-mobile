@@ -77,7 +77,7 @@ export const HomeComp = () => {
                             rowGap: 10,
                         }}
                     >
-                        <Header title="Kabar Terbaru" />
+                        <Header title="Kabar Terbaru" hideNotifButton={true} />
                         {homeNews.length >= 1 && (
                             <CourselNews newsList={homeNews} />
                         )}

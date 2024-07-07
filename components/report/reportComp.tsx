@@ -19,7 +19,7 @@ export const ReportComp = () => {
                     paddingTop: 10,
                 }}
             >
-                <Header title="Laporan" />
+                <Header title="Laporan" hideNotifButton={true} />
                 <ReportPanelPart />
             </ScrollView>
         </SafeAreaView>
