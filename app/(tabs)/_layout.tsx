@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
 import {
-  AppState,
-  AppStateStatus,
-  BackHandler,
-  Image,
-  StyleSheet,
+    AppState,
+    AppStateStatus,
+    BackHandler,
+    Image,
+    StyleSheet,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useGlobal } from "@/context/GlobalState";
@@ -12,156 +12,167 @@ import { getProfile } from "@/services/profile";
 import Login from "../login";
 import * as SplashScreen from "expo-splash-screen";
 import { splitString } from "@/utils/GetSplitString";
+import { getFcmToken } from "@/utils/GetFcmToken";
+import { sendFcmToken } from "@/services/home/saveFcmToken";
 
 const TabsLayout = () => {
-  const [isComponentMounted, setIsComponentMounted] = useState(false);
-  const { isAuthenticated, setAuthenticated, setMemberStatus, setProfile } = useGlobal();
+    const [isComponentMounted, setIsComponentMounted] = useState(false);
+    const { isAuthenticated, setAuthenticated, setMemberStatus, setProfile } =
+        useGlobal();
 
-  const fetchProfile = async () => {
-    const { status, data, error } = await getProfile();
-    if (status === 200) {
-      setAuthenticated(true);
-      const status = splitString(data.data.status as string)
-      
-      setMemberStatus({
-        isVerify: data.data.is_verify as boolean,
-        status: status[0],
-      });
-      setProfile({
-        name: data.data.profile.name,
-        nik: data.data.profile.nik,
-        phone: data.data.profile.phone,
-        username: data.data.profile.username,
-      })
-    }
-    if (status !== 200) {
-      if (status === 401) {
-        setAuthenticated(false);
-      }
-      console.log(error);
-    }
+    const fetchProfile = async () => {
+        const { status, data, error } = await getProfile();
+        if (status === 200) {
+            setAuthenticated(true);
+            const status = splitString(data.data.status as string);
 
-    setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 500);
-  };
+            setMemberStatus({
+                isVerify: data.data.is_verify as boolean,
+                status: status[0],
+            });
+            setProfile({
+                name: data.data.profile.name,
+                nik: data.data.profile.nik,
+                phone: data.data.profile.phone,
+                username: data.data.profile.username,
+            });
+        }
+        if (status !== 200) {
+            if (status === 401) {
+                setAuthenticated(false);
+            }
+            console.log(error);
+        }
 
-  useEffect(() => {
-    fetchProfile();
-    setIsComponentMounted(true);
-    const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      if (nextAppState === "active") {
+        setTimeout(() => {
+            SplashScreen.hideAsync();
+        }, 500);
+    };
+
+    useEffect(() => {
+        getFcmToken();
+        sendFcmToken();
         fetchProfile();
-      }
+        setIsComponentMounted(true);
+        const handleAppStateChange = (nextAppState: AppStateStatus) => {
+            if (nextAppState === "active") {
+                fetchProfile();
+                sendFcmToken();
+            }
+        };
+
+        const subscription = AppState.addEventListener(
+            "change",
+            handleAppStateChange
+        );
+        const handleBackPress = () => {
+            minimizeApp();
+            return true;
+        };
+
+        BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+        return () => {
+            subscription.remove();
+            BackHandler.removeEventListener(
+                "hardwareBackPress",
+                handleBackPress
+            );
+        };
+    }, []);
+
+    const minimizeApp = () => {
+        BackHandler.exitApp();
     };
 
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
-    const handleBackPress = () => {
-      minimizeApp();
-      return true;
-    };
+    if (!isAuthenticated && isComponentMounted) {
+        return <Login />;
+    }
 
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-    return () => {
-      subscription.remove();
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
-  }, []);
-
-  const minimizeApp = () => {
-    BackHandler.exitApp();
-  };
-
-  if (!isAuthenticated && isComponentMounted) {
-    return <Login />;
-  }
-
-  if (isAuthenticated && isComponentMounted) {
-    return (
-      <Tabs screenOptions={{
-        tabBarHideOnKeyboard: true
-      }}>
-        <Tabs.Screen
-          name="index"
-          options={{
-            headerShown: false,
-            title: "Beranda",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                style={styles.icon}
-                source={
-                  focused
-                    ? require("@/assets/images/tabbar/home.png")
-                    : require("@/assets/images/tabbar/home-inactive.png")
-                }
-              />
-            ),
-            tabBarStyle: styles.tabBar,
-            tabBarInactiveTintColor: "#C7C8CC",
-            tabBarActiveTintColor: "#54808C",
-          }}
-        />
-        <Tabs.Screen
-          name="reportPanel"
-          options={{
-            headerShown: false,
-            title: "Laporan",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                style={styles.icon}
-                source={
-                  focused
-                    ? require("@/assets/images/tabbar/news.png")
-                    : require("@/assets/images/tabbar/news-inactive.png")
-                }
-              />
-            ),
-            tabBarStyle: styles.tabBar,
-            tabBarInactiveTintColor: "#C7C8CC",
-            tabBarActiveTintColor: "#54808C",
-            tabBarItemStyle: { paddingTop: 2 },
-          }}
-        />
-        <Tabs.Screen
-          name="settingUser"
-          options={{
-            headerShown: false,
-            title: "Akun",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                style={styles.icon}
-                source={
-                  focused
-                    ? require("@/assets/images/tabbar/account.png")
-                    : require("@/assets/images/tabbar/account-inactive.png")
-                }
-              />
-            ),
-            tabBarStyle: styles.tabBar,
-            tabBarInactiveTintColor: "#C7C8CC",
-            tabBarActiveTintColor: "#54808C",
-            tabBarItemStyle: { paddingTop: 2 },
-          }}
-        />
-      </Tabs>
-    );
-  }
+    if (isAuthenticated && isComponentMounted) {
+        return (
+            <Tabs
+                screenOptions={{
+                    tabBarHideOnKeyboard: true,
+                }}
+            >
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        headerShown: false,
+                        title: "Beranda",
+                        tabBarIcon: ({ focused }) => (
+                            <Image
+                                style={styles.icon}
+                                source={
+                                    focused
+                                        ? require("@/assets/images/tabbar/home.png")
+                                        : require("@/assets/images/tabbar/home-inactive.png")
+                                }
+                            />
+                        ),
+                        tabBarStyle: styles.tabBar,
+                        tabBarInactiveTintColor: "#C7C8CC",
+                        tabBarActiveTintColor: "#54808C",
+                    }}
+                />
+                <Tabs.Screen
+                    name="reportPanel"
+                    options={{
+                        headerShown: false,
+                        title: "Laporan",
+                        tabBarIcon: ({ focused }) => (
+                            <Image
+                                style={styles.icon}
+                                source={
+                                    focused
+                                        ? require("@/assets/images/tabbar/news.png")
+                                        : require("@/assets/images/tabbar/news-inactive.png")
+                                }
+                            />
+                        ),
+                        tabBarStyle: styles.tabBar,
+                        tabBarInactiveTintColor: "#C7C8CC",
+                        tabBarActiveTintColor: "#54808C",
+                        tabBarItemStyle: { paddingTop: 2 },
+                    }}
+                />
+                <Tabs.Screen
+                    name="settingUser"
+                    options={{
+                        headerShown: false,
+                        title: "Akun",
+                        tabBarIcon: ({ focused }) => (
+                            <Image
+                                style={styles.icon}
+                                source={
+                                    focused
+                                        ? require("@/assets/images/tabbar/account.png")
+                                        : require("@/assets/images/tabbar/account-inactive.png")
+                                }
+                            />
+                        ),
+                        tabBarStyle: styles.tabBar,
+                        tabBarInactiveTintColor: "#C7C8CC",
+                        tabBarActiveTintColor: "#54808C",
+                        tabBarItemStyle: { paddingTop: 2 },
+                    }}
+                />
+            </Tabs>
+        );
+    }
 };
 
 export default TabsLayout;
 
 const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: "white",
-    height: 60,
-    paddingBottom: 6,
-    paddingTop: 6,
-  },
-  icon: {
-    width: 28,
-    height: 28,
-  },
+    tabBar: {
+        backgroundColor: "white",
+        height: 60,
+        paddingBottom: 6,
+        paddingTop: 6,
+    },
+    icon: {
+        width: 28,
+        height: 28,
+    },
 });

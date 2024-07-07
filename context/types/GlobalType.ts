@@ -15,9 +15,11 @@ export type TGlobalContextType = {
     isAuthenticated: boolean;
     memberStatus: IMemberStatus;
     profile: IProfile;
+    fcmToken: string;
 
     setLoading: (loading: boolean) => void;
     setAuthenticated: (authenticated: boolean) => void;
     setMemberStatus: (payload: IMemberStatus) => void;
     setProfile: (payload: IProfile) => void;
+    setFcmToken: (payload: string) => void;
 };

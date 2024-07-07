@@ -54,7 +54,6 @@ export default function RootLayout() {
   const [isAuth, setAuth] = useState(false);
   useEffect(() => {
     setMount(true);
-    getFcmToken();
 
     if (loaded) {
       notificationListener.current =

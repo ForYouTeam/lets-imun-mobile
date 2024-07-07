@@ -22,6 +22,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
         phone: "",
         username: "",
     });
+    const [fcmToken, setFcmToken] = useState('')
 
     return (
         <GlobalContext.Provider
@@ -34,6 +35,8 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
                 setMemberStatus,
                 profile,
                 setProfile,
+                fcmToken,
+                setFcmToken
             }}
         >
             {children}

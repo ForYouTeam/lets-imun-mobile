@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
@@ -31,4 +32,5 @@ async function registerForPushNotificationsAsync() {
 export async function getFcmToken() {
     const token = await registerForPushNotificationsAsync();
     console.log(token);
+    await AsyncStorage.setItem('fcmToken', token as string)
 }
