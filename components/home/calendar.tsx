@@ -4,7 +4,7 @@ import { useHome } from "@/context/home/HomeState";
 import { useSchedules } from "@/context/home/Schedules";
 import { IScheduleList } from "@/context/types/ScheduleType";
 import { getSchedules } from "@/services/home/ScheduleService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     Image,
     Text,
@@ -14,14 +14,16 @@ import {
 } from "react-native";
 
 interface IScheduleProps {
-    data: IScheduleList[]
+    data: IScheduleList[];
 }
 
-const ScheduleList: React.FC<IScheduleProps> = ({data}) => {
+const ScheduleList: React.FC<IScheduleProps> = ({ data }) => {
     return (
-        <View style={{
-            minHeight: 100
-        }}>
+        <View
+            style={{
+                minHeight: 100,
+            }}
+        >
             {data.map((item, index) => (
                 <View
                     key={index}
@@ -41,7 +43,7 @@ const ScheduleList: React.FC<IScheduleProps> = ({data}) => {
                     <View
                         style={{
                             flexDirection: "column",
-                            backgroundColor: 'white',
+                            backgroundColor: "white",
                             paddingVertical: 12,
                             paddingStart: 15,
                             paddingEnd: 10,
@@ -110,7 +112,41 @@ const ScheduleList: React.FC<IScheduleProps> = ({data}) => {
 const Calendar = () => {
     const { newsPayload } = useHome();
     const { isAuthenticated, setAuthenticated } = useGlobal();
-    const {isLoading, setLoading, scheduleList, getScheduleFromMonth, setScheduleList} = useSchedules()
+    const {
+        isLoading,
+        setLoading,
+        scheduleList,
+        getScheduleFromMonth,
+        setScheduleList,
+    } = useSchedules();
+
+    const monthList = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+    ];
+
+    const currentDate = new Date();
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(currentDate.getMonth());
+  
+    const getCurrentMonthName = (index: number): string => monthList[index];
+  
+    const nextMonth = (): void => {
+      setCurrentMonthIndex((prevIndex) => (prevIndex + 1) % monthList.length);
+    };
+  
+    const prevMonth = (): void => {
+      setCurrentMonthIndex((prevIndex) => (prevIndex - 1 + monthList.length) % monthList.length);
+    };
 
     const getScheduleList = async () => {
         const { data, error, status } = await getSchedules();
@@ -125,16 +161,15 @@ const Calendar = () => {
         if (status === 200 && data) {
             const result = data as {
                 data: {
-                    list: IScheduleList[]
-                }
-            }
-            console.log(result.data.list);
-            setScheduleList(result.data.list)
+                    list: IScheduleList[];
+                };
+            };
+            setScheduleList(result.data.list);
         }
     };
 
     useEffect(() => {
-        getScheduleList()
+        getScheduleList();
     }, []);
     return (
         <View style={{ paddingHorizontal: 10 }}>
@@ -170,7 +205,7 @@ const Calendar = () => {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            console.log("back");
+                            prevMonth()
                         }}
                         activeOpacity={0.8}
                         style={{
@@ -213,12 +248,12 @@ const Calendar = () => {
                                 fontFamily: "InterMedium",
                             }}
                         >
-                            {newsPayload.month}
+                            {getCurrentMonthName(currentMonthIndex)}
                         </Text>
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            console.log("back");
+                            nextMonth()
                         }}
                         activeOpacity={0.8}
                         style={{
@@ -241,7 +276,7 @@ const Calendar = () => {
                         />
                     </TouchableOpacity>
                 </View>
-                <ScheduleList data={getScheduleFromMonth('Juli')} />
+                <ScheduleList data={getScheduleFromMonth(getCurrentMonthName(currentMonthIndex))} />
             </View>
         </View>
     );
