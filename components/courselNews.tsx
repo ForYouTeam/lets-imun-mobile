@@ -5,13 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Image, ImageSourcePropType, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import Animated, { interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
-// interface DataType {
-//     title: string;
-//     category: string;
-//     img?: ImageSourcePropType;
-//     key?: string;
-// }
-
 type SpacerType = {
     key: string;
 };
