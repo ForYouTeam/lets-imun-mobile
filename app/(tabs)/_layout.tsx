@@ -15,7 +15,7 @@ import { splitString } from "@/utils/GetSplitString";
 
 const TabsLayout = () => {
   const [isComponentMounted, setIsComponentMounted] = useState(false);
-  const { isAuthenticated, setAuthenticated, setMemberStatus } = useGlobal();
+  const { isAuthenticated, setAuthenticated, setMemberStatus, setProfile } = useGlobal();
 
   const fetchProfile = async () => {
     const { status, data, error } = await getProfile();
@@ -27,6 +27,12 @@ const TabsLayout = () => {
         isVerify: data.data.is_verify as boolean,
         status: status[0],
       });
+      setProfile({
+        name: data.data.profile.name,
+        nik: data.data.profile.nik,
+        phone: data.data.profile.phone,
+        username: data.data.profile.username,
+      })
     }
     if (status !== 200) {
       if (status === 401) {

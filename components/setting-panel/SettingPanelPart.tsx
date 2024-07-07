@@ -26,25 +26,25 @@ interface IAccountData {
 }
 
 const data: ISettingData[] = [
-  {
-    title: "Waktu Notifikasi",
-    value: "-1",
-    valueLabel: "1 Hari Sebelum",
-    type: "modal",
-    icon: require("@/assets/images/icon/bell.png"),
-  },
-  {
-    title: "Notifikasi",
-    value: "1",
-    type: "switch",
-    icon: require("@/assets/images/icon/bell.png"),
-  },
-  {
-    title: "Bunyikan",
-    value: "0",
-    type: "switch",
-    icon: require("@/assets/images/icon/hearing.png"),
-  },
+  // {
+  //   title: "Waktu Notifikasi",
+  //   value: "-1",
+  //   valueLabel: "1 Hari Sebelum",
+  //   type: "modal",
+  //   icon: require("@/assets/images/icon/bell.png"),
+  // },
+  // {
+  //   title: "Notifikasi",
+  //   value: "1",
+  //   type: "switch",
+  //   icon: require("@/assets/images/icon/bell.png"),
+  // },
+  // {
+  //   title: "Bunyikan",
+  //   value: "0",
+  //   type: "switch",
+  //   icon: require("@/assets/images/icon/hearing.png"),
+  // },
   {
     title: "Bahasa",
     value: "Indonesia",
@@ -54,29 +54,6 @@ const data: ISettingData[] = [
     title: "Versi Aplikasi",
     value: "1.0.0",
     icon: require("@/assets/images/icon/hastag.png"),
-  },
-];
-
-const accountData: IAccountData[] = [
-  {
-    title: "Nama Lengkap",
-    key: "name",
-    value: "Larimusketir Pompom",
-  },
-  {
-    title: "Email",
-    key: "email",
-    value: "mail@nob.com",
-  },
-  {
-    title: "Nomor Telepon",
-    key: "phone",
-    value: "08123456789",
-  },
-  {
-    title: "Alamat",
-    key: "address",
-    value: "Jalan Jalan",
   },
 ];
 
@@ -173,6 +150,24 @@ const SettingList = () => {
 };
 
 const AccountInformation = () => {
+  const {profile} = useGlobal()
+  const accountData: IAccountData[] = [
+    {
+      title: "Nama Lengkap",
+      key: "name",
+      value: profile.name,
+    },
+    {
+      title: "Email",
+      key: "email",
+      value: profile.username,
+    },
+    {
+      title: "Nomor Telepon",
+      key: "phone",
+      value: profile.phone,
+    },
+  ];
   return (
     <View
       style={{
@@ -277,7 +272,7 @@ const SettingPanelPart = () => {
               fontSize: 11,
             }}
           >
-            Terkait Pemberitahuan
+            Lainnya
           </Text>
         </View>
         <View
