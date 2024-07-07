@@ -3,12 +3,13 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { getNews } from "@/services/home/NewsService";
 import { INewsSuccess } from "@/services/home/type";
 import { useCallback, useEffect, useState } from "react";
-import { RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
+import { Dimensions, RefreshControl, SafeAreaView, ScrollView, View } from "react-native";
 import Header from "./header";
 import CourselNews from "../courselNews";
 import Calendar from "./calendar";
 import { router } from "expo-router";
 import { NewsShimmer } from "../placeholder/newsShimmer";
+import { SchedulesProvider } from "@/context/home/Schedules";
 
 const wait = (timeout: number) => {
     return new Promise((resolve) => {
@@ -21,10 +22,14 @@ export const HomeComp = () => {
 
     const colorScheme = useColorScheme();
     const [refreshing, setRefreshing] = useState(false);
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
     }, []);
+
+    const windowHeight = Dimensions.get('window').height;
+    const calculatedHeight = windowHeight < 800 ? windowHeight : 'auto';
 
     const fetchNews = async () => {
         const { status, data, error } = await getNews();
@@ -38,9 +43,9 @@ export const HomeComp = () => {
 
         if (data) {
             const news = data as {
-                data: INewsSuccess
+                data: INewsSuccess;
             };
-            setHomeNews(news.data.list)
+            setHomeNews(news.data.list);
         }
     };
 
@@ -62,7 +67,7 @@ export const HomeComp = () => {
                     style={{
                         paddingTop: 20,
                         backgroundColor: "white",
-                        height: "100%",
+                        height: calculatedHeight,
                         width: "100%",
                     }}
                 >
@@ -76,10 +81,10 @@ export const HomeComp = () => {
                         {homeNews.length >= 1 && (
                             <CourselNews newsList={homeNews} />
                         )}
-                        {homeNews.length < 1 && (
-                            <NewsShimmer />
-                        )}
-                        <Calendar />
+                        {homeNews.length < 1 && <NewsShimmer />}
+                        <SchedulesProvider>
+                            <Calendar />
+                        </SchedulesProvider>
                     </View>
                 </View>
             </ScrollView>

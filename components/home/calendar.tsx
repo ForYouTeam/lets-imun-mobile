@@ -1,5 +1,10 @@
 import { Colors } from "@/constants/Colors";
+import { useGlobal } from "@/context/GlobalState";
 import { useHome } from "@/context/home/HomeState";
+import { useSchedules } from "@/context/home/Schedules";
+import { IScheduleList } from "@/context/types/ScheduleType";
+import { getSchedules } from "@/services/home/ScheduleService";
+import { useEffect } from "react";
 import {
     Image,
     Text,
@@ -8,49 +13,24 @@ import {
     View,
 } from "react-native";
 
-interface DataType {
-    title: string;
-    date: string;
-    time: string;
-    desc?: string;
+interface IScheduleProps {
+    data: IScheduleList[]
 }
 
-const data: DataType[] = [
-    {
-        title: "Imuniasi Anak",
-        date: "10 Juni 2024",
-        time: "10:00 - 12:00",
-        desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quibusdam dicta deserunt explicabo laborum assumenda!",
-    },
-    {
-        title: "Sunatan Massal",
-        date: "25 Juni 2024",
-        time: "09:00 - 12:00",
-        desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quibusdam dicta deserunt explicabo laborum assumenda!",
-    },
-    {
-        title: "Sunatan Massal II",
-        date: "30 Juni 2024",
-        time: "09:00 - 12:00",
-        desc: "",
-    },
-];
-
-const ScheduleList = () => {
+const ScheduleList: React.FC<IScheduleProps> = ({data}) => {
     return (
-        <View>
+        <View style={{
+            minHeight: 100
+        }}>
             {data.map((item, index) => (
                 <View
                     key={index}
                     style={{
                         marginBottom: 8,
-                        paddingVertical: 12,
-                        paddingStart: 15,
-                        paddingEnd: 10,
                         borderWidth: 1,
                         borderColor: "#C4DFDF",
                         borderRadius: 8,
-                        backgroundColor: "#whi",
+                        backgroundColor: "white",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
@@ -61,6 +41,10 @@ const ScheduleList = () => {
                     <View
                         style={{
                             flexDirection: "column",
+                            backgroundColor: 'white',
+                            paddingVertical: 12,
+                            paddingStart: 15,
+                            paddingEnd: 10,
                         }}
                     >
                         <Text
@@ -76,7 +60,7 @@ const ScheduleList = () => {
                             style={{
                                 flexDirection: "row",
                                 columnGap: 8,
-                                marginTop: item.desc ? 4 : 0,
+                                marginTop: item.description ? 4 : 0,
                             }}
                         >
                             <Text
@@ -94,16 +78,16 @@ const ScheduleList = () => {
                                     fontFamily: "InterRegular",
                                 }}
                             >
-                                {item.time}
+                                {item.date}
                             </Text>
                         </View>
-                        {item.desc && (
+                        {item.description && (
                             <Text
                                 style={{
                                     maxWidth: "100%",
                                 }}
                             >
-                                {item.desc}
+                                {item.description}
                             </Text>
                         )}
                     </View>
@@ -125,6 +109,32 @@ const ScheduleList = () => {
 
 const Calendar = () => {
     const { newsPayload } = useHome();
+    const { isAuthenticated, setAuthenticated } = useGlobal();
+    const {isLoading, setLoading, scheduleList, getScheduleFromMonth, setScheduleList} = useSchedules()
+
+    const getScheduleList = async () => {
+        const { data, error, status } = await getSchedules();
+
+        if (status !== 200 && status === 401) {
+            setAuthenticated(false);
+        }
+        if (status !== 200 && error) {
+            console.log("error bagian jadwal: ", error);
+        }
+
+        if (status === 200 && data) {
+            const result = data as {
+                data: {
+                    list: IScheduleList[]
+                }
+            }
+            setScheduleList(result.data.list)
+        }
+    };
+
+    useEffect(() => {
+        getScheduleList()
+    }, []);
     return (
         <View style={{ paddingHorizontal: 10 }}>
             <View
@@ -202,7 +212,7 @@ const Calendar = () => {
                                 fontFamily: "InterMedium",
                             }}
                         >
-                            { newsPayload.month }
+                            {newsPayload.month}
                         </Text>
                     </View>
                     <TouchableOpacity
@@ -230,7 +240,7 @@ const Calendar = () => {
                         />
                     </TouchableOpacity>
                 </View>
-                <ScheduleList />
+                <ScheduleList data={getScheduleFromMonth('Juli')} />
             </View>
         </View>
     );
