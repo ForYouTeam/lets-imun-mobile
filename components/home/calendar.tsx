@@ -78,7 +78,7 @@ const ScheduleList: React.FC<IScheduleProps> = ({data}) => {
                                     fontFamily: "InterRegular",
                                 }}
                             >
-                                {item.date}
+                                {item.time}
                             </Text>
                         </View>
                         {item.description && (
@@ -128,6 +128,7 @@ const Calendar = () => {
                     list: IScheduleList[]
                 }
             }
+            console.log(result.data.list);
             setScheduleList(result.data.list)
         }
     };

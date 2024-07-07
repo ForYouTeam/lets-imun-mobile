@@ -2,6 +2,7 @@ export interface IScheduleList {
     id: string;
     title: string;
     date: string;
+    time: string;
     month: string;
     description: string;
 }
