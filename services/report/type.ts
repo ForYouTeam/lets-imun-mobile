@@ -24,3 +24,20 @@ export interface IVerifyResponse {
     data?: null | IVerify
     error?: null | unknown | IErrorResponseVerify
 }
+
+export interface IReportResponse {
+    nama_anak: string
+    umur: string
+    bb: string
+    tb: string
+    jenis_kelamin: string
+    tanggal_report: string
+    check_up: string
+}
+
+export interface IServiceResponse {
+    status : number | string,
+    message?: string,
+    data   : any,
+    error  : any
+}

@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { IVerifyPayload, TReportPannel } from "../types/ReportType";
+import { IReportResponse } from "@/services/report/type";
 
 const ReportContext = createContext<TReportPannel | undefined>(undefined);
 
@@ -16,6 +17,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({
     img_document: null,
   });
   const [loading, setLoading] = useState(false);
+  const [reportList, setReportList] = useState<IReportResponse[]>([])
 
   return (
     <ReportContext.Provider
@@ -24,6 +26,8 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({
         setVerifyPayload,
         loading,
         setLoading,
+        reportList,
+        setReportList
       }}
     >
       {children}

@@ -1,42 +1,15 @@
 import { Colors } from "@/constants/Colors";
+import { useGlobal } from "@/context/GlobalState";
+import { useReport } from "@/context/report/ReportState";
+import { getReport } from "@/services/report";
+import { IReportResponse } from "@/services/report/type";
+import { splitString } from "@/utils/GetSplitString";
+import { useEffect } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 
 const ReportPanelPart = () => {
-    interface IReportData {
-        name: string;
-        age: string;
-        gender: number;
-        weight: string;
-        height: string;
-        checkup: string[];
-    }
-
-    const data: IReportData[] = [
-        {
-            name: "Rafael",
-            age: "1.2",
-            gender: 1,
-            weight: "10",
-            height: "80",
-            checkup: ["Imunisasi", "Pemeriksaan", "Konsultasi"],
-        },
-        {
-            name: "Putri",
-            age: "1.1",
-            gender: 2,
-            weight: "8",
-            height: "75",
-            checkup: ["Imunisasi", "Pemeriksaan", "Konsultasi"],
-        },
-        {
-            name: "Lala",
-            age: "1.8",
-            gender: 2,
-            weight: "8",
-            height: "75",
-            checkup: ["Imunisasi", "Pemeriksaan", "Konsultasi"],
-        },
-    ];
+    const {reportList, setReportList} = useReport()
+    const {setAuthenticated} = useGlobal()
 
     const ImageGender = (gender: number) => {
         if (gender === 1) {
@@ -45,6 +18,31 @@ const ReportPanelPart = () => {
         return require("@/assets/images/icon/girl.png");
     };
 
+    const getReportList = async () => {
+        const {data, error, status} = await getReport('2024-07')
+
+        if (!data && status === 401) {
+            setAuthenticated(false)
+        }
+
+        if (status !== 200 && error) {
+            console.log(error);
+        }
+
+        if (status === 200 && data) {
+            const result = data as {
+                data: {
+                    list: IReportResponse[]
+                }
+            }
+            setReportList(result.data.list)
+            console.log(reportList);
+        }
+    }
+
+    useEffect(() => {
+        getReportList()
+    }, [])
     return (
         <View
             style={{
@@ -103,7 +101,7 @@ const ReportPanelPart = () => {
                 </View>
             </View>
 
-            {data.map((item, index) => {
+            {reportList.map((item, index) => {
                 return (
                     <View
                         key={index}
@@ -118,9 +116,10 @@ const ReportPanelPart = () => {
                                 fontSize: 18,
                                 fontFamily: "MontserratSemiBold",
                                 transform: [{ scaleY: 1.1 }],
+                                textTransform: 'capitalize'
                             }}
                         >
-                            {item.name}
+                            {item.nama_anak}
                         </Text>
                         <View
                             style={{
@@ -149,7 +148,7 @@ const ReportPanelPart = () => {
                                         padding: 10,
                                     }}
                                 >
-                                    {item.age} Tahun
+                                    {item.umur}
                                 </Text>
                                 <Text
                                     style={{
@@ -159,7 +158,7 @@ const ReportPanelPart = () => {
                                         padding: 10,
                                     }}
                                 >
-                                    {item.weight} Kg
+                                    {item.bb}
                                 </Text>
                                 <Text
                                     style={{
@@ -169,7 +168,7 @@ const ReportPanelPart = () => {
                                         padding: 10,
                                     }}
                                 >
-                                    {item.height} Cm
+                                    {item.tb}
                                 </Text>
                             </View>
                             <View
@@ -190,7 +189,7 @@ const ReportPanelPart = () => {
                                             width: 80,
                                             height: 80,
                                         }}
-                                        source={ImageGender(item.gender)}
+                                        source={ImageGender(item.jenis_kelamin == 'man' ? 1 : 2)}
                                     />
                                 </View>
                                 <View
@@ -202,7 +201,7 @@ const ReportPanelPart = () => {
                                         width: "70%",
                                     }}
                                 >
-                                    {item.checkup.map((check, index2) => {
+                                    {splitString(item.check_up).map((check, index2) => {
                                         return (
                                             <View
                                                 key={index2}

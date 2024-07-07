@@ -1,6 +1,7 @@
 import { SafeAreaView, ScrollView } from "react-native"
 import Header from "../home/header"
 import ReportPanelPart from "../report-panel/reportPanelPart"
+import { ReportProvider } from "@/context/report/ReportState"
 
 export const ReportComp = () => {
     return (
@@ -20,7 +21,9 @@ export const ReportComp = () => {
                 }}
             >
                 <Header title="Laporan" hideNotifButton={true} />
-                <ReportPanelPart />
+                <ReportProvider>
+                    <ReportPanelPart />
+                </ReportProvider>
             </ScrollView>
         </SafeAreaView>
     )

@@ -1,3 +1,4 @@
+import { IReportResponse } from "@/services/report/type";
 
 export interface IVerifyPayload {
     nik: string | number,
@@ -11,7 +12,10 @@ export interface IVerifyPayload {
 
 export type TReportPannel = {
     verifyPayload: IVerifyPayload;
-    setVerifyPayload: (payload: IVerifyPayload) => void;
     loading: boolean,
+    reportList: IReportResponse[]
+
+    setVerifyPayload: (payload: IVerifyPayload) => void;
     setLoading: (payload: boolean) => void;
+    setReportList: (payload: IReportResponse[]) => void;
 }

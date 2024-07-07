@@ -1,5 +1,5 @@
 import { getToken } from "@/utils/StoreToken";
-import { IVerifyResponse } from "./type";
+import { IReportResponse, IServiceResponse, IVerifyResponse } from "./type";
 import { IVerifyPayload } from "@/context/types/ReportType";
 import * as FileSystem from 'expo-file-system';
 
@@ -66,3 +66,49 @@ export const sendVerify = async (payload: IVerifyPayload): Promise<IVerifyRespon
         };
     }
 };
+
+export const getReport = async (month: string): Promise<IServiceResponse> => {
+    const { data, error } = await getToken();
+  if (error) {
+    return {
+      status: 401,
+      data: null,
+      error: error,
+    };
+  }
+  
+  try {
+    const response = await fetch(`${baseUrl}/v1/get-child-report?sort_month=${month}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${data}`,
+      },
+    });
+
+    if (!response.ok) {
+      return {
+        status: response.status,
+        data: null,
+        error: new Error('Failed to fetch report data'),
+      };
+    }
+
+    const responseData = await response.json();
+    return {
+      status: response.status,
+      data: responseData as {
+        data: {
+            list: IReportResponse[]
+        }
+      },
+      error: null,
+    };
+
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+      error: error,
+    };
+  }
+}
