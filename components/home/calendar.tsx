@@ -136,16 +136,20 @@ const Calendar = () => {
     ];
 
     const currentDate = new Date();
-    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(currentDate.getMonth());
-  
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(
+        currentDate.getMonth()
+    );
+
     const getCurrentMonthName = (index: number): string => monthList[index];
-  
+
     const nextMonth = (): void => {
-      setCurrentMonthIndex((prevIndex) => (prevIndex + 1) % monthList.length);
+        setCurrentMonthIndex((prevIndex) => (prevIndex + 1) % monthList.length);
     };
-  
+
     const prevMonth = (): void => {
-      setCurrentMonthIndex((prevIndex) => (prevIndex - 1 + monthList.length) % monthList.length);
+        setCurrentMonthIndex(
+            (prevIndex) => (prevIndex - 1 + monthList.length) % monthList.length
+        );
     };
 
     const getScheduleList = async () => {
@@ -181,7 +185,6 @@ const Calendar = () => {
                     marginVertical: 24,
                     flexDirection: "column",
                     rowGap: 14,
-                    backgroundColor: "#F7F7F7",
                     borderRadius: 8,
                 }}
             >
@@ -205,7 +208,7 @@ const Calendar = () => {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            prevMonth()
+                            prevMonth();
                         }}
                         activeOpacity={0.8}
                         style={{
@@ -253,7 +256,7 @@ const Calendar = () => {
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            nextMonth()
+                            nextMonth();
                         }}
                         activeOpacity={0.8}
                         style={{
@@ -276,7 +279,35 @@ const Calendar = () => {
                         />
                     </TouchableOpacity>
                 </View>
-                <ScheduleList data={getScheduleFromMonth(getCurrentMonthName(currentMonthIndex))} />
+                {getScheduleFromMonth(getCurrentMonthName(currentMonthIndex))
+                    .length > 1 && (
+                    <ScheduleList
+                        data={getScheduleFromMonth(
+                            getCurrentMonthName(currentMonthIndex)
+                        )}
+                    />
+                )}
+                {getScheduleFromMonth(getCurrentMonthName(currentMonthIndex))
+                    .length < 1 && (
+                    <View style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 50
+                    }}>
+                        <Image
+                            style={{
+                                width: 120,
+                                height: 120,
+                            }}
+                            source={require("@/assets/images/empty.jpg")}
+                        />
+                        <Text style={{
+                            fontFamily: 'InterRegular',
+                            color: Colors.Text
+                        }}>Jadwal bulan ini kosong</Text>
+                    </View>
+                )}
             </View>
         </View>
     );

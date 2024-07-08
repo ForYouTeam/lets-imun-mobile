@@ -30,12 +30,14 @@ const TabsLayout = () => {
                 isVerify: data.data.is_verify as boolean,
                 status: status[0],
             });
-            setProfile({
-                name: data.data.profile.name,
-                nik: data.data.profile.nik,
-                phone: data.data.profile.phone,
-                username: data.data.profile.username,
-            });
+            if (data.data.profile) {
+                setProfile({
+                    name: data.data.profile.name,
+                    nik: data.data.profile.nik,
+                    phone: data.data.profile.phone,
+                    username: data.data.profile.username,
+                });
+            }
         }
         if (status !== 200) {
             if (status === 401) {

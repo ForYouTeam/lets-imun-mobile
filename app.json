@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "example",
+        "name": "lets-imun",
         "slug": "example",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
         "scheme": "myapp",
@@ -17,7 +17,7 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
+                "foregroundImage": "./assets/images/login.png",
                 "backgroundColor": "#ffffff"
             },
             "package": "letsimun.letdeploy.my.id"
